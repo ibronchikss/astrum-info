@@ -1,0 +1,306 @@
+/*
+ * ASTRUM — дополнения к оригинальному style.css.
+ * Подключается после него на главной и в магазине. Оригинальный CSS не менялся.
+ */
+
+/* ===== Главная: цвет планеты ===== */
+/* Розовый берётся с самой планеты (assets/images/astrum-logo.png): светлые грани ≈ #fb51d0,
+   тени ≈ #a1048b. Им покрашены слово ASTRUM в заголовке, кнопка «Начать играть» и звезда в шапке. */
+.astrum-home {
+  --planet: #fb51d0;
+  --planet-light: #ff7be3;
+  --planet-shadow: #a1048b;
+}
+
+.astrum-home .brand-symbol,
+.astrum-home .hero h1 > span {
+  color: var(--planet);
+}
+
+.astrum-home .hero-actions .button.primary {
+  background: var(--planet);
+  color: #2a0b25;
+  box-shadow: 0 3px var(--planet-shadow);
+}
+
+.astrum-home .hero-actions .button.primary:hover {
+  background: var(--planet-light);
+}
+
+/* ===== Главная: бегущая строка ===== */
+/* В разметке шесть одинаковых групп, лента сдвигается ровно на одну (1/6 длины) и возвращается —
+   шов не виден. Группы с aria-hidden — копии для зацикливания. */
+.ticker {
+  justify-content: flex-start;
+  gap: 0;
+  padding: 16px 0;
+}
+
+.ticker-track {
+  display: flex;
+  flex-shrink: 0;
+  width: max-content;
+  animation: ticker-scroll 24s linear infinite;
+  will-change: transform;
+}
+
+.ticker:hover .ticker-track {
+  animation-play-state: paused;
+}
+
+.ticker-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 30px;
+  padding-right: 30px;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-16.6666667%); }
+}
+
+@media (max-width: 760px) {
+  .ticker {
+    padding: 13px 0;
+  }
+
+  .ticker-group {
+    gap: 25px;
+    padding-right: 25px;
+  }
+
+  .ticker-track {
+    animation-duration: 20s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
+}
+
+/* ===== Главная: пиксельная галактика вместо карты ===== */
+/* Фон рисует assets/js/galaxy.js на canvas; здесь — тёмное «космическое» основание, сам canvas
+   и затемнение слева, чтобы текст читался. */
+.world-banner.pixel-world {
+  background: radial-gradient(ellipse at 70% 50%, #2b1637 0%, #181220 46%, #0e0d14 100%);
+}
+
+.pixel-world .galaxy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -2;
+  image-rendering: pixelated;
+}
+
+.pixel-world::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(90deg, #101117f2 0%, #101117c4 30%, #10111740 58%, #10111700 80%);
+}
+
+@media (max-width: 760px) {
+  .world-banner.pixel-world {
+    padding-bottom: 250px;
+    align-items: flex-start;
+    background: linear-gradient(#0e0d14, #181220);
+  }
+
+  .pixel-world::after {
+    background: linear-gradient(#101117f5 0%, #101117d9 45%, #10111700 75%);
+  }
+}
+
+/* ===== Магазин: плашка оплаты, вкладки категорий ===== */
+.shop-toolbar a.notice:hover {
+  background: #33283f;
+  border-color: #8d6fb0;
+}
+
+.shop-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 28px;
+}
+
+.shop-tab {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #201d27;
+  border: 1px solid #3b3549;
+  color: #cfc6dc;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.shop-tab:hover {
+  background: #302739;
+}
+
+.shop-tab.is-active {
+  background: #bd9bea;
+  border-color: #bd9bea;
+  color: #20162e;
+}
+
+/* ===== Магазин: карточки с картинками ===== */
+.product-art.has-image {
+  height: auto;
+  aspect-ratio: 1 / 1;
+  background: none;
+  overflow: hidden;
+}
+
+.product-art.has-image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-art.has-image > img {
+  transform: scale(1.05);
+}
+
+.product-card .product-name {
+  min-height: 2.9em; /* выравнивает цены, если название в две строки */
+}
+
+.price-note small {
+  color: #9c92a6;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.shop-toolbar + .shop-tabs,
+.shop-tabs + .product-grid {
+  margin-top: 0;
+}
+
+/* ===== Магазин: окно товара ===== */
+.modal.is-product {
+  max-width: 600px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 28px;
+}
+
+.modal-thumb {
+  flex-shrink: 0;
+  width: 92px;
+  height: 92px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px #0006;
+}
+
+.modal-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-head h2 {
+  margin-top: 8px;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+.modal-price {
+  margin: 22px 0 0;
+}
+
+.modal-price.is-muted {
+  color: #9c92a6;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-body h3 {
+  margin: 26px 0 0;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+}
+
+.modal-body p {
+  margin-top: 14px;
+}
+
+.modal-body ul {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  color: #ac9bbd;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.modal-body li {
+  position: relative;
+  padding-left: 16px;
+}
+
+.modal-body li::before {
+  content: "·";
+  position: absolute;
+  left: 3px;
+  color: #bc98ff;
+  font-weight: 800;
+}
+
+.modal-body code {
+  padding: 1px 6px;
+  border: 1px solid #6f558744;
+  border-radius: 6px;
+  background: #33283f;
+  color: #e6d9f5;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+  word-break: break-word;
+}
+
+.modal .subtle-note {
+  margin-top: 22px;
+}
+
+.modal .subtle-note + .button {
+  margin-top: 12px;
+}
+
+@media (max-width: 760px) {
+  .shop-tabs {
+    flex-wrap: nowrap;
+    margin-right: -20px;
+    padding-right: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .shop-tab {
+    flex-shrink: 0;
+  }
+
+  .modal-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+  }
+
+  .modal-head h2 {
+    font-size: 22px;
+  }
+}

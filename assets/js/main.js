@@ -2,7 +2,7 @@
  * ASTRUM — минимальный скрипт для статичной копии сайта.
  * Оригинальный JS (Next.js/React) получить не удалось, поэтому поведение ниже
  * воссоздано по разметке:
- *   - мобильное меню, копирование IP, кнопка «Начать играть», индикатор онлайна;
+ *   - сжатие шапки при прокрутке, мобильное меню, копирование IP, кнопка «Начать играть», индикатор онлайна;
  *   - поиск по правилам;
  *   - магазин: вкладки категорий, поиск по товарам и окно товара (тексты берутся из
  *     <template> в shop.html, покупка ведёт в магазин shop.astrums.pro).
@@ -24,6 +24,35 @@
     if (className) node.className = className;
     if (text != null) node.textContent = text;
     return node;
+  }
+
+  // --- Шапка: при прокрутке сжимается в закруглённую «капсулу» (стили — extra.css) --
+  var siteHeader = document.querySelector(".site-header");
+  if (siteHeader) {
+    var headerTicking = false;
+    var updateHeader = function (instant) {
+      headerTicking = false;
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var shrunk = siteHeader.classList.contains("is-scrolled");
+      // небольшой гистерезис, чтобы шапка не «дрожала» на границе
+      var want = shrunk ? y > 8 : y > 32;
+      if (want === shrunk) return;
+      if (instant === true) {
+        siteHeader.style.transition = "none";
+        siteHeader.classList.toggle("is-scrolled", want);
+        void siteHeader.offsetWidth;
+        siteHeader.style.transition = "";
+      } else {
+        siteHeader.classList.toggle("is-scrolled", want);
+      }
+    };
+    window.addEventListener("scroll", function () {
+      if (!headerTicking) {
+        headerTicking = true;
+        window.requestAnimationFrame(updateHeader);
+      }
+    }, { passive: true });
+    updateHeader(true); // страница могла открыться уже прокрученной (перезагрузка, переход по якорю)
   }
 
   // --- Мобильное меню -------------------------------------------------------
@@ -128,6 +157,25 @@
   if (dot && counter) {
     loadStatus();
     setInterval(loadStatus, STATUS_REFRESH_MS);
+  }
+
+  // --- Главная: полоски в «Вопросах» плавно заполняются, когда блок виден -----
+  var faqSection = document.querySelector(".faq");
+  if (faqSection) {
+    var showFaq = function () { faqSection.classList.add("faq-in"); };
+    var reduceFaq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceFaq || !("IntersectionObserver" in window)) {
+      showFaq();
+    } else {
+      faqSection.classList.add("faq-ready");
+      var faqObserver = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          showFaq();
+          faqObserver.disconnect();
+        }
+      }, { threshold: 0.2 });
+      faqObserver.observe(faqSection);
+    }
   }
 
   // --- Правила: поиск по тексту --------------------------------------------

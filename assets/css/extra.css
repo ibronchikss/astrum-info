@@ -5,14 +5,13 @@
 
 /* ===== Главная: цвет планеты ===== */
 /* Розовый берётся с самой планеты (assets/images/astrum-logo.png): светлые грани ≈ #fb51d0,
-   тени ≈ #a1048b. Им покрашены слово ASTRUM в заголовке, кнопка «Начать играть» и звезда в шапке. */
+   тени ≈ #a1048b. Им покрашены слово ASTRUM в заголовке и кнопка «Начать играть». */
 .astrum-home {
   --planet: #fb51d0;
   --planet-light: #ff7be3;
   --planet-shadow: #a1048b;
 }
 
-.astrum-home .brand-symbol,
 .astrum-home .hero h1 > span {
   color: var(--planet);
 }
@@ -25,6 +24,132 @@
 
 .astrum-home .hero-actions .button.primary:hover {
   background: var(--planet-light);
+}
+
+/* ===== Шапка: логотип и «капсула» при прокрутке ===== */
+/* Вверху страницы шапка — на всю ширину. Когда страницу прокручивают (main.js ставит класс
+   is-scrolled), она уменьшается и закругляется в парящую капсулу, как на референсе. */
+.astrum-site .site-header {
+  width: auto;
+  transition: top 0.4s ease, left 0.4s ease, right 0.4s ease, height 0.4s ease, padding 0.4s ease,
+    border-radius 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.brand-logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.brand-logo img {
+  display: block;
+  width: auto;
+  height: 54px;
+  transition: height 0.4s ease;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.35));
+}
+
+.main-nav a,
+.main-nav a.active::after {
+  transition: padding 0.4s ease, bottom 0.4s ease, color 0.2s ease;
+}
+
+.astrum-site .site-header.is-scrolled {
+  top: 12px;
+  left: 12%;
+  right: 12%;
+  height: 66px;
+  padding: 0 14px 0 26px;
+  border: 1px solid rgba(188, 152, 255, 0.24);
+  border-radius: 33px;
+  background-color: rgba(18, 15, 26, 0.78);
+  box-shadow: 0 16px 44px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+}
+
+.site-header.is-scrolled .brand-logo img {
+  height: 40px;
+}
+
+@media (min-width: 761px) {
+  .site-header.is-scrolled .main-nav a {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  .site-header.is-scrolled .main-nav a.active::after {
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .brand-logo img {
+    height: 46px;
+  }
+
+  .astrum-site .site-header.is-scrolled {
+    left: 3%;
+    right: 3%;
+  }
+
+  .site-header.is-scrolled .brand-logo img {
+    height: 36px;
+  }
+}
+
+@media (max-width: 760px) {
+  .brand-logo img {
+    height: 40px;
+  }
+
+  .astrum-site .site-header.is-scrolled {
+    top: 8px;
+    left: 10px;
+    right: 10px;
+    height: 58px;
+    padding: 0 12px 0 18px;
+    border-radius: 29px;
+  }
+
+  .site-header.is-scrolled .brand-logo img {
+    height: 32px;
+  }
+
+  .astrum-site .site-header.is-scrolled .main-nav.open {
+    top: 66px;
+    border: 1px solid rgba(188, 152, 255, 0.24);
+    border-radius: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .astrum-site .site-header,
+  .brand-logo img,
+  .main-nav a,
+  .main-nav a.active::after {
+    transition: none;
+  }
+}
+
+/* Кнопка «Наш Discord» в шапке — «таблетка» */
+.header-discord {
+  border-radius: 999px;
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+@media (max-width: 1100px) {
+  .header-discord {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+}
+
+/* Логотип в подвале */
+.footer-logo img {
+  height: 46px;
+  filter: none;
 }
 
 /* ===== Главная: бегущая строка ===== */
@@ -80,6 +205,450 @@
   .ticker-track {
     animation: none;
   }
+}
+
+/* ===== Главная: карточки «О сервере» — фиолетовая обводка и подъём при наведении ===== */
+.feature-card {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.feature-card:hover,
+.feature-card:focus-within {
+  transform: translateY(-10px);
+  border-color: #b794f6;
+  box-shadow: 0 0 0 1px #b794f6, 0 0 28px -4px rgba(155, 109, 255, 0.55), 0 26px 50px -18px rgba(120, 80, 220, 0.6);
+}
+
+@media (hover: none) {
+  .feature-card:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .feature-card:hover,
+  .feature-card:focus-within {
+    transform: none;
+  }
+}
+
+/* ===== Главная: два скриншота под лентой ===== */
+.gallery {
+  display: grid;
+  grid-template-columns: 1.65fr 1fr;
+  gap: 24px;
+  margin-top: 72px;
+}
+
+.gallery-item {
+  position: relative;
+  height: clamp(300px, 36vw, 460px);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(188, 152, 255, 0.22);
+  border-radius: 24px;
+  background: #1a1722;
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.gallery-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(16, 17, 23, 0) 55%, rgba(16, 17, 23, 0.55) 100%),
+    linear-gradient(135deg, rgba(188, 152, 255, 0.12), rgba(188, 152, 255, 0) 45%);
+  border-radius: inherit;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.gallery-side img {
+  object-position: 52% 50%;
+}
+
+.gallery-item:hover {
+  transform: translateY(-6px);
+  border-color: #b794f6;
+  box-shadow: 0 0 0 1px #b794f6, 0 30px 70px -26px rgba(120, 80, 220, 0.55);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+@media (max-width: 760px) {
+  .gallery {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 40px;
+  }
+
+  .gallery-item {
+    height: auto;
+    aspect-ratio: 16 / 10;
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item,
+  .gallery-item img {
+    transition: none;
+  }
+
+  .gallery-item:hover,
+  .gallery-item:hover img {
+    transform: none;
+  }
+}
+
+/* ===== Главная: вопросы и ответы вместо «Первых шагов» ===== */
+.faq .section-heading {
+  align-items: flex-end;
+}
+
+.faq-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: 1px solid #3c354c;
+  border-radius: 999px;
+  background: #221e2c;
+  color: #e6e0f0;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: border-color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+}
+
+.faq-all:hover {
+  border-color: #b794f6;
+  background: #2b2438;
+  transform: translateY(-2px);
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+  margin-top: 38px;
+}
+
+.faq-card {
+  position: relative;
+  overflow: hidden;
+  padding: 34px;
+  border: 1px solid #ffffff12;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #201d28, #191820);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-card::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(183, 148, 246, 0.14), rgba(183, 148, 246, 0) 70%);
+  pointer-events: none;
+}
+
+.faq-card:hover {
+  transform: translateY(-6px);
+  border-color: #b794f6;
+  box-shadow: 0 0 0 1px #b794f6, 0 26px 50px -22px rgba(120, 80, 220, 0.55);
+}
+
+.faq-card h3 {
+  position: relative;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
+}
+
+.faq-card p {
+  position: relative;
+  max-width: 560px;
+  margin-top: 14px;
+  color: #a79fb5;
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.faq-season { grid-column: span 7; }
+.faq-free { grid-column: span 5; }
+.faq-worlds { grid-column: 1 / -1; }
+
+/* Сезоны: девять «таблеток», последняя — текущий сезон */
+.season-chart {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 34px;
+  padding-top: 26px;
+}
+
+.season-bar {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.season-bar i {
+  display: block;
+  width: 100%;
+  height: 64px;
+  border-radius: 12px;
+  background: #34303f;
+  transform-origin: bottom;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.season-bar b {
+  color: #6f687c;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.season-bar.is-now { flex: 1.9; }
+
+.season-bar.is-now i {
+  background: linear-gradient(90deg, #a77cf0, #c8a8ff 70%, rgba(200, 168, 255, 0.55));
+  box-shadow: 0 0 26px -2px rgba(167, 124, 240, 0.65);
+}
+
+.season-bar.is-now b { color: #cdb4ff; }
+
+.season-bar.is-now em {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  color: #cdb4ff;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* Бесплатный доступ: крупный «0 ₽» */
+.free-price {
+  position: relative;
+  margin-top: 22px;
+  color: #fff;
+  font-size: clamp(88px, 9vw, 124px);
+  font-weight: 800;
+  letter-spacing: -6px;
+  line-height: 1;
+}
+
+.free-price span {
+  margin-left: 4px;
+  color: #b794f6;
+}
+
+.faq-checks {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  color: #d6cfe3;
+  font-size: 14px;
+}
+
+.faq-checks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.faq-checks svg {
+  flex-shrink: 0;
+  color: #b794f6;
+}
+
+/* Размеры миров */
+.worlds-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 44px;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.worlds-visual {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.worlds-squares {
+  position: relative;
+  flex-shrink: 0;
+  width: 130px;
+  height: 130px;
+  border-radius: 18px;
+  background: #34303f;
+}
+
+.sq-small {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #a77cf0, #c8a8ff);
+  box-shadow: 0 0 22px -2px rgba(167, 124, 240, 0.7);
+  transform: translate(-50%, -50%);
+}
+
+.worlds-legend {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #d6cfe3;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.worlds-legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.worlds-legend i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.dot-big { background: #6f687c; }
+.dot-small { background: #b794f6; }
+
+.worlds-list {
+  display: grid;
+  gap: 20px;
+}
+
+.world-row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.world-row-top small {
+  color: #8f879c;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.world-row-top b {
+  flex-shrink: 0;
+  color: #d6cfe3;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.faq-bar {
+  height: 8px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #34303f;
+}
+
+.faq-bar i {
+  display: block;
+  width: var(--w, 100%);
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8d6fe0, #c8a8ff);
+  transform-origin: left;
+  transition: transform 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s;
+}
+
+.faq .faq-note {
+  margin-top: 26px;
+  font-size: 13px;
+}
+
+.faq-join {
+  margin-top: 34px;
+}
+
+/* Анимация появления (main.js добавляет faq-ready, затем faq-in при показе на экране) */
+.faq-ready .season-bar i { transform: scaleY(0.12); }
+.faq-ready .faq-bar i { transform: scaleX(0); }
+.faq-in .season-bar i { transform: scaleY(1); }
+.faq-in .faq-bar i { transform: scaleX(1); }
+.faq-in .season-bar:nth-child(2) i { transition-delay: 0.06s; }
+.faq-in .season-bar:nth-child(3) i { transition-delay: 0.12s; }
+.faq-in .season-bar:nth-child(4) i { transition-delay: 0.18s; }
+.faq-in .season-bar:nth-child(5) i { transition-delay: 0.24s; }
+.faq-in .season-bar:nth-child(6) i { transition-delay: 0.3s; }
+.faq-in .season-bar:nth-child(7) i { transition-delay: 0.36s; }
+.faq-in .season-bar:nth-child(8) i { transition-delay: 0.42s; }
+.faq-in .season-bar:nth-child(9) i { transition-delay: 0.48s; }
+
+@media (max-width: 1100px) {
+  .faq-season, .faq-free { grid-column: 1 / -1; }
+  .worlds-body { grid-template-columns: 1fr; gap: 28px; }
+}
+
+@media (max-width: 760px) {
+  .faq .section-heading { align-items: flex-start; }
+  .faq-all { margin-top: 4px; }
+  .faq-grid { gap: 14px; margin-top: 28px; }
+  .faq-card { padding: 26px 22px; border-radius: 20px; }
+  .faq-card h3 { font-size: 21px; }
+  .season-chart { gap: 5px; }
+  .season-bar i { height: 52px; border-radius: 9px; }
+  .season-bar.is-now { flex: 1.7; }
+  .free-price { font-size: 96px; letter-spacing: -5px; }
+  .worlds-visual { gap: 20px; }
+  .world-row-top { font-size: 14px; flex-wrap: wrap; row-gap: 2px; }
+  .faq-join { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-card, .faq-all, .season-bar i, .faq-bar i { transition: none; }
+  .faq-card:hover { transform: none; }
+  .faq-ready .season-bar i, .faq-ready .faq-bar i { transform: none; }
 }
 
 /* ===== Главная: пиксельная галактика вместо карты ===== */

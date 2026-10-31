@@ -1,7 +1,7 @@
 /*
  * ASTRUM — пиксельная галактика в блоке «Карта звёздного мира» (только главная).
  * Рисуется на маленьком canvas (1 клетка = несколько пикселей экрана) и растягивается без сглаживания,
- * поэтому всё — и звёзды, и логотип в центре — состоит из одинаковых квадратиков.
+ * поэтому всё — звёзды, рукава, планеты и светящееся ядро — состоит из одинаковых квадратиков.
  * Это воссозданный с нуля декор, а не часть оригинального сайта.
  */
 (function () {
@@ -32,11 +32,6 @@
   var OUTER = ["#7a6cf5", "#5a7bff", "#4f5fc4", "#6b3fa8"];
   var DUST = ["#3a2a52", "#2f2447"];
 
-  var sprite = new Image();
-  var spriteReady = false;
-  sprite.onload = function () { spriteReady = true; layout(); };
-  sprite.src = banner.getAttribute("data-sprite") || "assets/images/galaxy-logo.png";
-
   var W = 0, H = 0, P = 3, cx = 0, cy = 0, R = 0, TILT = 0.55;
   var stars = [], sparks = [], arms = [], planets = [], halo = null;
 
@@ -66,8 +61,8 @@
     for (var j = 0; j < n; j++) {
       var u = rand();
       var kind = rand();
-      var bulge = kind < 0.18;
-      var disc = !bulge && kind < 0.42;
+      var bulge = kind < 0.24;
+      var disc = !bulge && kind < 0.46;
       var r, th, col;
       if (disc) {
         // рассеянный диск между рукавами: плотнее к центру, редеет к краю
@@ -90,19 +85,19 @@
       arms.push({ r: r, th: th, c: col });
     }
 
-    // Три маленькие планеты на орбитах вокруг логотипа
+    // Три маленькие планеты на орбитах вокруг ядра
     var orbits = [
-      { rx: R * 0.5, c1: "#ffd9a0", c2: "#e8a24a", size: 3, sp: 0.5, ph: 0.6 },
-      { rx: R * 0.68, c1: "#9fe3ff", c2: "#4aa7e8", size: 4, sp: -0.32, ph: 3.1 },
-      { rx: R * 0.86, c1: "#d9b8ff", c2: "#8a5be0", size: 3, sp: 0.2, ph: 5.2 }
+      { rx: R * 0.3, c1: "#ffd9a0", c2: "#e8a24a", size: 3, sp: 0.5, ph: 0.6 },
+      { rx: R * 0.5, c1: "#9fe3ff", c2: "#4aa7e8", size: 4, sp: -0.32, ph: 3.1 },
+      { rx: R * 0.72, c1: "#d9b8ff", c2: "#8a5be0", size: 3, sp: 0.2, ph: 5.2 }
     ];
     orbits.forEach(function (o) { planets.push(o); });
 
-    // Мягкое свечение вокруг логотипа — ступенчатое, чтобы тоже было «пиксельным»
+    // Мягкое свечение вокруг ядра — ступенчатое, чтобы тоже было «пиксельным»
     halo = document.createElement("canvas");
     halo.width = W; halo.height = H;
     var h = halo.getContext("2d");
-    var hr = Math.min(R * 0.55, 58);
+    var hr = Math.min(R * 0.5, 52);
     var bands = [[1.0, 0.04], [0.82, 0.07], [0.64, 0.1], [0.46, 0.14], [0.3, 0.2]];
     bands.forEach(function (b) {
       h.fillStyle = "rgba(251,81,208," + b[1] + ")";
@@ -112,6 +107,25 @@
         if (span > 0) h.fillRect(Math.round(cx) - span, Math.round(cy) + y, span * 2, 1);
       }
     });
+
+    // Яркое ядро: круг из ступенчатых «колец»; на стыках — шахматная раскладка вместо плавного перехода
+    var cr = Math.max(9, Math.round(R * 0.1)), cry = cr * 0.72;
+    var rings = [
+      [1.0, "#fb51d0"], [0.8, "#ff7fe0"], [0.6, "#ffa9ec"], [0.42, "#ffd2f6"], [0.24, "#ffffff"]
+    ];
+    for (var yy = -Math.ceil(cry); yy <= Math.ceil(cry); yy++) {
+      for (var xx = -cr; xx <= cr; xx++) {
+        var dd = Math.sqrt((xx * xx) / (cr * cr) + (yy * yy) / (cry * cry));
+        if (dd > 1) continue;
+        var idx = 0;
+        for (var q = 0; q < rings.length; q++) if (dd <= rings[q][0]) idx = q;
+        // у границы кольца чередуем цвет с соседним, как дизеринг в пиксель-арте
+        var colr = rings[idx][1];
+        if (idx > 0 && dd > rings[idx][0] - 0.08 && (xx + yy) % 2 === 0) colr = rings[idx - 1][1];
+        h.fillStyle = colr;
+        h.fillRect(Math.round(cx) + xx, Math.round(cy) + yy, 1, 1);
+      }
+    }
   }
 
   function layout() {
@@ -188,17 +202,17 @@
       }
       var pa = pl.ph + (reduceMotion ? 0 : t * pl.sp);
       var px = Math.round(cx + pl.rx * Math.cos(pa)), py = Math.round(cy + ry * Math.sin(pa));
-      var behind = Math.sin(pa) < 0; // дальняя половина орбиты — планета уходит за логотип
-      if (!behind || Math.abs(px - cx) > 40) {
-        rect(pl.c2, px, py, pl.size, pl.size);
-        rect(pl.c1, px, py, pl.size - 1 || 1, pl.size - 1 || 1);
-      }
+      rect(pl.c2, px, py, pl.size, pl.size);
+      rect(pl.c1, px, py, pl.size - 1 || 1, pl.size - 1 || 1);
     }
 
-    // Логотип в центре, раз в ~1,2 с «подпрыгивает» на клетку
-    if (spriteReady) {
-      var bob = reduceMotion ? 0 : (Math.floor(t / 1.2) % 2 === 0 ? 0 : -1);
-      ctx.drawImage(sprite, Math.round(cx - sprite.width / 2), Math.round(cy - sprite.height / 2) + bob);
+    // Лучи над ядром: крест, который раз в ~1,2 с «дышит» на клетку
+    var pulse = reduceMotion ? 1 : (Math.floor(t / 1.2) % 2 === 0 ? 1 : 0);
+    var arm = Math.max(10, Math.round(R * 0.16)) + pulse * 2;
+    for (var ray = 1; ray <= arm; ray++) {
+      var tone = ray < arm * 0.4 ? "#ffffff" : ray < arm * 0.7 ? "#ffd2f6" : "#ff7fe0";
+      rect(tone, cx + ray, cy); rect(tone, cx - ray, cy);
+      if (ray <= arm * 0.7) { rect(tone, cx, cy + ray); rect(tone, cx, cy - ray); }
     }
   }
 

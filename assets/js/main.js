@@ -326,6 +326,9 @@
         if (tocLinks[article.id]) tocLinks[article.id].hidden = !visible;
         if (visible) shown += 1;
       });
+      // заголовок блока законопроектов прячется, если ни один законопроект не подошёл под поиск
+      var billsHead = rulesContent.querySelector(".bills-head");
+      if (billsHead) billsHead.hidden = filtering && !rulesContent.querySelector("article.bill:not([hidden])");
       emptyRules.hidden = shown !== 0;
       punishButtons.forEach(function (button) {
         var on = button.getAttribute("data-punish") === activePunish;

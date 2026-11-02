@@ -1301,7 +1301,7 @@ html[data-theme="light"] {
 
 /* ===== Шапка: «Начать игру» и переключатель темы ===== */
 .site-header {
-  --hd-btn-bg: #221e2c;
+  --hd-btn-bg: #0f0d14;
   --hd-btn-line: #3c354c;
   --hd-btn-ink: #d6cfe3;
 }
@@ -1317,19 +1317,18 @@ html[data-theme="light"] {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   min-height: 44px;
-  padding: 0 18px 0 8px;
+  padding: 0 22px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid var(--hd-btn-line);
   border-radius: 999px;
-  background: linear-gradient(110deg, #7c4dd6 0%, #b535c4 55%, #e0309f 100%);
-  box-shadow: 0 8px 22px -8px rgba(190, 50, 190, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  color: #fff;
+  background: var(--hd-btn-bg);
+  color: var(--hd-btn-ink);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   white-space: nowrap;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  transition: border-color 0.25s ease, background-color 0.35s ease, color 0.25s ease;
 }
 
 /* блик, пробегающий по кнопке при наведении */
@@ -1340,40 +1339,21 @@ html[data-theme="light"] {
   bottom: 0;
   left: -60%;
   width: 40%;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.08), transparent);
   transform: skewX(-20deg);
   transition: left 0.6s ease;
   pointer-events: none;
 }
 
 .header-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px -8px rgba(210, 60, 200, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  filter: brightness(1.08);
+  border-color: var(--accent, #b794f6);
+  color: var(--hd-ink-hover, #fff);
 }
 
 .header-cta:hover::after {
   left: 130%;
 }
 
-.header-cta:active {
-  transform: translateY(0);
-}
-
-/* значок «играть» — белый кружок слева */
-.header-cta svg:first-child {
-  box-sizing: content-box;
-  width: 12px;
-  height: 12px;
-  padding: 6px 5px 6px 7px;
-  border-radius: 50%;
-  background: #fff;
-  color: #b535c4;
-}
-
-.header-cta svg:last-child {
-  opacity: 0.85;
-}
 
 .theme-toggle {
   position: relative;
@@ -1429,12 +1409,8 @@ html.theme-anim *::after {
 
   .header-cta {
     min-height: 40px;
-    padding: 0 14px 0 8px;
+    padding: 0 18px;
     font-size: 12px;
-  }
-
-  .header-cta svg:last-child {
-    display: none;
   }
 
   .theme-toggle {
@@ -1455,11 +1431,7 @@ html.theme-anim *::after {
 
   .header-cta {
     min-height: 38px;
-    padding: 0 13px;
-  }
-
-  .header-cta svg:first-child {
-    display: none;
+    padding: 0 15px;
   }
 
   .theme-toggle {
@@ -1970,4 +1942,441 @@ html.theme-anim *::after {
 @media (prefers-reduced-motion: reduce) {
   .rule-filter { transition: none; }
   .rule-filter:hover { transform: none; }
+}
+
+/* ===== Правила: законопроекты (карточки в стиле Discord) и их содержание ===== */
+/* спрайт с книгой для баннеров не занимает места */
+.bill-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* второй столбик содержания — под основным; цветная точка = цвет полоски карточки */
+.rules-toc-bills a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rules-toc-bills a[hidden] {
+  display: none;
+}
+
+.bill-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--bill, #b794f6);
+  box-shadow: 0 0 10px -1px var(--bill, #b794f6);
+}
+
+.rules-toc-bills small {
+  margin-left: auto;
+  padding-left: 6px;
+  white-space: nowrap;
+  color: #6f6680;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+}
+
+/* боковая колонка прилипает, но не длиннее экрана — иначе нижние ссылки нельзя достать */
+@media (min-width: 761px) {
+  .rules-side {
+    max-height: calc(100vh - 140px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #3c354c transparent;
+    padding-bottom: 26px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+  }
+
+  .rules-side .rules-toc {
+    gap: 12px;
+  }
+}
+
+/* заголовок блока */
+.bills-head {
+  position: relative;
+  padding: 28px 30px;
+  border: 1px solid #ffffff12;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #1f1c27, #17151d);
+  scroll-margin-top: 118px;
+}
+
+.rules-content .bills-head h2 {
+  margin: 8px 0 0;
+  color: #fff;
+  font-size: 30px;
+  letter-spacing: -0.9px;
+  line-height: 1.1;
+}
+
+.rules-content .bills-head p {
+  max-width: 62ch;
+  margin: 12px 0 0;
+  color: #9d95ac;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.bills-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.bills-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px 7px 11px;
+  border: 1px solid #ffffff14;
+  border-radius: 999px;
+  background: #ffffff08;
+  color: #d3cbdf;
+  font-size: 12.5px;
+  font-weight: 700;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.bills-chip:hover {
+  border-color: var(--bill);
+  background: #ffffff10;
+  transform: translateY(-2px);
+}
+
+/* карточка законопроекта */
+.rules-content article.bill {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  scroll-margin-top: 118px;
+}
+
+.bill-card {
+  position: relative;
+  padding: 26px 28px 28px 32px;
+  border: 1px solid #ffffff0f;
+  border-radius: 18px;
+  background: #1b1922;
+  box-shadow: inset 5px 0 0 var(--bill, #b794f6);
+  color: #d3cbdf;
+}
+
+.bill-badge {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bill) 18%, transparent);
+  color: var(--bill);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rules-content .bill-card h2,
+.rules-content .bill-card h3,
+.rules-content .bill-card h4 {
+  margin: 0;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.rules-content .bill-card .bill-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-left: 12px;
+  border-left: 3px solid #ffffff1f;
+  font-size: clamp(21px, 3vw, 30px);
+  font-weight: 900;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.rules-content .bill-card .bill-h {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 10px;
+  padding-left: 12px;
+  border-left: 3px solid #ffffff1f;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.rules-content .bill-card .bill-sub {
+  margin: 20px 0 8px;
+  padding-left: 12px;
+  border-left: 3px solid #ffffff1f;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.bill-card .emo {
+  flex: none;
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.rules-content .bill-card p {
+  margin: 0 0 8px;
+  color: #d3cbdf;
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+.rules-content .bill-card p.bill-clause {
+  margin-top: 12px;
+}
+
+.bill-card code.num {
+  padding: 2px 7px;
+  border: 1px solid rgba(183, 148, 246, 0.22);
+  border-radius: 6px;
+  background: rgba(183, 148, 246, 0.12);
+  color: #cdb4ff;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12.5px;
+}
+
+.bill-card ul,
+.bill-card ol {
+  display: grid;
+  gap: 4px;
+  margin: 6px 0 10px;
+  padding-left: 24px;
+}
+
+.bill-card ul {
+  list-style: disc;
+}
+
+.bill-card ol {
+  list-style: decimal;
+}
+
+.bill-card li {
+  color: #d3cbdf;
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+.bill-card li::marker {
+  color: #8f879c;
+}
+
+.bill-card strong {
+  color: #fff;
+  font-weight: 800;
+}
+
+.bill-card hr {
+  margin: 22px 0 0;
+  border: 0;
+  border-top: 1px solid #ffffff14;
+}
+
+.bill-note {
+  margin: 8px 0 12px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid rgba(255, 255, 255, 0.18);
+  color: #a79fb5;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.bill-note strong {
+  color: #b9b1c7;
+}
+
+.bill-note ul {
+  margin: 4px 0;
+}
+
+.bill-note li {
+  color: #a79fb5;
+  font-size: 13.5px;
+}
+
+/* упоминания, каналы, даты — как в Discord */
+.mention,
+.chan {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: rgba(88, 101, 242, 0.3);
+  color: #c9cdfb;
+  font-weight: 600;
+}
+
+.stamp {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #ffffff14;
+  color: #e6e0ee;
+  font-weight: 600;
+}
+
+.bill-link {
+  color: #6ea8fe;
+}
+
+.bill-cut {
+  color: #8f879c;
+  letter-spacing: 1px;
+}
+
+.bill-sign {
+  margin-top: 22px;
+}
+
+.bill-sign li {
+  color: #9d95ac;
+}
+
+.rules-content .bill-card p.bill-more {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed #ffffff1f;
+  color: #9d95ac;
+  font-size: 13.5px;
+}
+
+.bill-more a {
+  color: var(--bill);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* баннер документа, как у картинок в Discord */
+.bill-banner {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  margin: 24px 0 0;
+  padding: 22px 20px 18px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px) 0 0 / 26px 26px,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px) 0 0 / 26px 26px, #25242a;
+}
+
+.bb-title {
+  color: #fff;
+  font-size: clamp(22px, 6.4vw, 46px);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.55);
+}
+
+.bb-sub {
+  color: #fff;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.bb-book {
+  width: 104px;
+  height: 124px;
+  margin: 8px auto 0;
+  filter: drop-shadow(0 0 22px var(--bk));
+}
+
+.bill-banner figcaption {
+  margin-top: 4px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.4);
+}
+
+/* ссылка «Законопроекты на этой странице» в разделе 10 */
+.rule-cta-ghost {
+  margin-left: 10px;
+  border: 1px solid rgba(183, 148, 246, 0.5);
+  background: transparent;
+  box-shadow: none;
+  color: #d9c4ff;
+}
+
+.rule-cta-ghost:hover {
+  background: rgba(183, 148, 246, 0.14);
+}
+
+@media (max-width: 760px) {
+  .bills-head {
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+
+  .rules-content .bills-head h2 {
+    font-size: 24px;
+  }
+
+  .bill-card {
+    padding: 20px 16px 22px 22px;
+    border-radius: 16px;
+  }
+
+  .rules-content .bill-card .bill-h {
+    font-size: 16px;
+  }
+
+  .bill-card ul,
+  .bill-card ol {
+    padding-left: 20px;
+  }
+
+  .rule-cta-ghost {
+    margin-left: 0;
+  }
+
+  .bill-banner {
+    padding: 18px 14px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bills-chip {
+    transition: none;
+  }
+
+  .bills-chip:hover {
+    transform: none;
+  }
+}
+
+/* колонки правил не шире экрана: длинное слово/упоминание переносится, а не растягивает страницу */
+.rules-layout > * {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .rules-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.bill-card,
+.bills-head {
+  overflow-wrap: anywhere;
 }

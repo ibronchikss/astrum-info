@@ -128,7 +128,6 @@ html[data-theme="light"] .photo-hero .server-address strong { color: var(--ink);
 html[data-theme="light"] .photo-hero .server-address { color: var(--ink-2); }
 html[data-theme="light"] .photo-hero .hero-facts { color: var(--ink-2); }
 html[data-theme="light"] .photo-hero .hero-facts svg { color: #7c4dd6; }
-html[data-theme="light"] .photo-hero .visual-coordinate { color: #3d2d70; text-shadow: 0 1px 8px rgba(255, 255, 255, 0.8); }
 html[data-theme="light"] .photo-hero .floating-star { color: #8a5cdc; }
 html[data-theme="light"] .photo-hero .star-two { color: #6f5aa8; }
 html[data-theme="light"] .photo-hero .planet-halo { border-color: rgba(255, 255, 255, 0.55); }
@@ -544,3 +543,92 @@ html[data-theme="light"] .eyebrow:not(.season) { color: var(--accent-2); }
 html[data-theme="light"] .rule-filter.is-active {
   background: color-mix(in srgb, currentColor 16%, #fff);
 }
+
+/* ---------- Законопроекты (правила) ---------- */
+html[data-theme="light"] .bills-head {
+  border-color: var(--line);
+  background: #fff;
+}
+
+html[data-theme="light"] .rules-content .bills-head h2 { color: var(--ink); }
+html[data-theme="light"] .rules-content .bills-head p { color: var(--ink-3); }
+
+html[data-theme="light"] .bills-chip {
+  border-color: var(--line);
+  background: #faf8ff;
+  color: var(--ink-2);
+}
+
+html[data-theme="light"] .bills-chip:hover { background: #f0ebfa; }
+
+html[data-theme="light"] .rules-toc-bills small { color: #8a80a0; }
+
+html[data-theme="light"] .bill-card {
+  border-color: var(--line);
+  background: #fff;
+  box-shadow: inset 5px 0 0 var(--bill, #7c4dd6), 0 10px 30px -22px rgba(48, 28, 90, 0.35);
+  color: var(--ink-2);
+}
+
+html[data-theme="light"] .bill-badge {
+  background: color-mix(in srgb, var(--bill) 22%, #fff);
+  color: color-mix(in srgb, var(--bill) 45%, #1c1628);
+}
+
+html[data-theme="light"] .rules-content .bill-card h2,
+html[data-theme="light"] .rules-content .bill-card h3,
+html[data-theme="light"] .rules-content .bill-card h4 { color: var(--ink); }
+
+html[data-theme="light"] .rules-content .bill-card .bill-title,
+html[data-theme="light"] .rules-content .bill-card .bill-h,
+html[data-theme="light"] .rules-content .bill-card .bill-sub { border-left-color: rgba(48, 28, 90, 0.16); }
+
+html[data-theme="light"] .rules-content .bill-card p,
+html[data-theme="light"] .bill-card li { color: var(--ink-2); }
+
+html[data-theme="light"] .bill-card strong { color: var(--ink); }
+html[data-theme="light"] .bill-card li::marker { color: #8a80a0; }
+html[data-theme="light"] .bill-card hr { border-top-color: var(--line); }
+
+html[data-theme="light"] .bill-card code.num {
+  border-color: rgba(124, 77, 214, 0.22);
+  background: rgba(124, 77, 214, 0.08);
+  color: #5a2fb0;
+}
+
+html[data-theme="light"] .bill-note {
+  border-left-color: rgba(48, 28, 90, 0.2);
+  color: var(--ink-3);
+}
+
+html[data-theme="light"] .bill-note strong,
+html[data-theme="light"] .bill-note li { color: var(--ink-3); }
+
+html[data-theme="light"] .mention,
+html[data-theme="light"] .chan {
+  background: rgba(88, 101, 242, 0.12);
+  color: #4752c4;
+}
+
+html[data-theme="light"] .stamp {
+  background: rgba(48, 28, 90, 0.08);
+  color: var(--ink);
+}
+
+html[data-theme="light"] .bill-link { color: #2a6bd6; }
+html[data-theme="light"] .bill-cut { color: #8a80a0; }
+html[data-theme="light"] .bill-sign li { color: var(--ink-3); }
+
+html[data-theme="light"] .rules-content .bill-card p.bill-more {
+  border-top-color: var(--line);
+  color: var(--ink-3);
+}
+
+html[data-theme="light"] .bill-more a { color: #5a2fb0; }
+
+html[data-theme="light"] .rule-cta-ghost {
+  border-color: rgba(124, 77, 214, 0.45);
+  color: #5a2fb0;
+}
+
+html[data-theme="light"] .rule-cta-ghost:hover { background: rgba(124, 77, 214, 0.1); }

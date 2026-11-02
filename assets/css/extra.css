@@ -2380,3 +2380,16 @@ html.theme-anim *::after {
 .bills-head {
   overflow-wrap: anywhere;
 }
+
+/* ===== Главная: логотип-планета — своя картинка для каждой темы ===== */
+.hero-visual > img.logo-light {
+  display: none;
+}
+
+html[data-theme="light"] .hero-visual > img.logo-dark {
+  display: none;
+}
+
+html[data-theme="light"] .hero-visual > img.logo-light {
+  display: block;
+}

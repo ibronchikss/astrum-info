@@ -632,3 +632,42 @@ html[data-theme="light"] .rule-cta-ghost {
 }
 
 html[data-theme="light"] .rule-cta-ghost:hover { background: rgba(124, 77, 214, 0.1); }
+
+/* ---------- Содержание правил и законопроектов ---------- */
+html[data-theme="light"] .rules-side .rules-toc a { color: var(--ink-2); }
+html[data-theme="light"] .rules-side .rules-toc a:hover { background: #f4f0fb; color: var(--ink); }
+
+html[data-theme="light"] .rules-side .rules-toc a.is-active {
+  border-color: rgba(124, 77, 214, 0.3);
+  background: linear-gradient(90deg, rgba(124, 77, 214, 0.14), rgba(124, 77, 214, 0.04));
+  color: #3d1f85;
+}
+
+html[data-theme="light"] .rules-side .rules-toc a.is-active::before { background: #7c4dd6; }
+html[data-theme="light"] .toc-count { background: rgba(124, 77, 214, 0.12); color: #5a2fb0; }
+html[data-theme="light"] .rules-toc .toc-n { background: #f0ebfa; color: #7a6f94; }
+html[data-theme="light"] .rules-toc a:hover .toc-n { color: #5a2fb0; }
+html[data-theme="light"] .rules-toc a.is-active .toc-n { background: #7c4dd6; color: #fff; }
+html[data-theme="light"] .rules-toc-bills small { color: #8a80a0; }
+
+html[data-theme="light"] .rules-toc-bills a .toc-n {
+  background: color-mix(in srgb, var(--bill) 24%, #fff);
+  color: color-mix(in srgb, var(--bill) 50%, #1c1628);
+}
+
+html[data-theme="light"] .rules-toc-bills a:hover .toc-n {
+  background: color-mix(in srgb, var(--bill) 34%, #fff);
+  color: color-mix(in srgb, var(--bill) 45%, #1c1628);
+}
+
+html[data-theme="light"] .rules-side .rules-toc-bills a.is-active {
+  border-color: color-mix(in srgb, var(--bill) 60%, #fff);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bill) 22%, #fff), #fff);
+  color: var(--ink);
+}
+
+html[data-theme="light"] .rules-side .rules-toc-bills a.is-active::before,
+html[data-theme="light"] .rules-toc-bills a.is-active .toc-n {
+  background: var(--bill);
+  color: #1c1628;
+}

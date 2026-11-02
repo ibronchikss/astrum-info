@@ -358,17 +358,27 @@
     }
 
     // в содержании подсвечивается раздел, который сейчас на экране
-    if ("IntersectionObserver" in window) {
-      var spy = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          Object.keys(tocLinks).forEach(function (id) {
-            tocLinks[id].classList.toggle("is-active", id === entry.target.id);
-          });
-        });
-      }, { rootMargin: "-20% 0px -70% 0px" });
-      articles.forEach(function (article) { spy.observe(article); });
-    }
+    // (последний, верх которого уже поднялся выше линии под шапкой; у конца страницы — последний видимый)
+    var spyTick = false;
+    var spyUpdate = function () {
+      spyTick = false;
+      var line = 260;
+      var current = null;
+      var atBottom = window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 4;
+      var visible = articles.filter(function (article) { return !article.hidden; });
+      visible.forEach(function (article) {
+        if (article.getBoundingClientRect().top <= line) current = article;
+      });
+      if (atBottom && visible.length) current = visible[visible.length - 1];
+      Object.keys(tocLinks).forEach(function (id) {
+        tocLinks[id].classList.toggle("is-active", !!current && id === current.id);
+      });
+    };
+    window.addEventListener("scroll", function () {
+      if (!spyTick) { spyTick = true; window.requestAnimationFrame(spyUpdate); }
+    }, { passive: true });
+    window.addEventListener("resize", spyUpdate);
+    spyUpdate();
   }
 
   // --- Магазин: категории, поиск и окно товара -----------------------------

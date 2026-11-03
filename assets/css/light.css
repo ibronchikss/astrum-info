@@ -220,37 +220,6 @@ html[data-theme="light"] .gallery-item:hover {
   box-shadow: 0 0 0 1px #7c4dd6, 0 30px 70px -28px rgba(100, 60, 200, 0.5);
 }
 
-/* вопросы используют переменные --surface, --ink и т.д. из этого файла */
-html[data-theme="light"] .qa-num {
-  -webkit-text-stroke-color: #8a5cdc;
-}
-
-html[data-theme="light"] .join-dot {
-  border-color: rgba(124, 77, 214, 0.35);
-  background: #efe8fb;
-  color: #6a3fc4;
-}
-
-html[data-theme="light"] .join-step:first-child .join-dot {
-  border-color: transparent;
-  background: var(--pink);
-  color: #2a0b25;
-}
-
-html[data-theme="light"] .join-tag { color: #6a3fc4; }
-
-html[data-theme="light"] .ledger-row {
-  box-shadow: 0 1px 2px rgba(40, 20, 90, 0.04);
-}
-
-html[data-theme="light"] .ledger-row.is-now {
-  background: linear-gradient(90deg, rgba(251, 81, 208, 0.16), #fff 70%);
-}
-
-html[data-theme="light"] .ledger-row.is-now .ledger-days {
-  color: #c4189c;
-}
-
 /* соцсети под вопросами */
 html[data-theme="light"] .faq-links-head h3 { color: var(--ink); }
 
@@ -495,21 +464,6 @@ html[data-theme="light"] .chip-fine { color: #0d7a60; background: rgba(40, 190, 
 html[data-theme="light"] .chip-admin { color: #6a3fc4; background: rgba(124, 77, 214, 0.12); border-color: rgba(124, 77, 214, 0.35); }
 html[data-theme="light"] .chip-tag { color: var(--ink-2); background: rgba(48, 28, 90, 0.05); border-color: var(--line-strong); }
 
-html[data-theme="light"] .law-card {
-  border-color: rgba(124, 77, 214, 0.28);
-  background: linear-gradient(145deg, rgba(124, 77, 214, 0.1), rgba(124, 77, 214, 0.02));
-}
-
-html[data-theme="light"] .law-card strong { color: var(--ink); }
-html[data-theme="light"] .law-card small { color: var(--ink-2); }
-
-html[data-theme="light"] .rule-cta {
-  background: #7c4dd6;
-  color: #fff;
-  box-shadow: 0 3px #55309a;
-}
-
-html[data-theme="light"] .rule-cta:hover { background: #8d62e0; }
 
 html[data-theme="light"] .rule-info li {
   border-color: var(--line);
@@ -544,95 +498,6 @@ html[data-theme="light"] .rule-filter.is-active {
   background: color-mix(in srgb, currentColor 16%, #fff);
 }
 
-/* ---------- Законопроекты (правила) ---------- */
-html[data-theme="light"] .bills-head {
-  border-color: var(--line);
-  background: #fff;
-}
-
-html[data-theme="light"] .rules-content .bills-head h2 { color: var(--ink); }
-html[data-theme="light"] .rules-content .bills-head p { color: var(--ink-3); }
-
-html[data-theme="light"] .bills-chip {
-  border-color: var(--line);
-  background: #faf8ff;
-  color: var(--ink-2);
-}
-
-html[data-theme="light"] .bills-chip:hover { background: #f0ebfa; }
-
-html[data-theme="light"] .rules-toc-bills small { color: #8a80a0; }
-
-html[data-theme="light"] .bill-card {
-  border-color: var(--line);
-  background: #fff;
-  box-shadow: inset 5px 0 0 var(--bill, #7c4dd6), 0 10px 30px -22px rgba(48, 28, 90, 0.35);
-  color: var(--ink-2);
-}
-
-html[data-theme="light"] .bill-badge {
-  background: color-mix(in srgb, var(--bill) 22%, #fff);
-  color: color-mix(in srgb, var(--bill) 45%, #1c1628);
-}
-
-html[data-theme="light"] .rules-content .bill-card h2,
-html[data-theme="light"] .rules-content .bill-card h3,
-html[data-theme="light"] .rules-content .bill-card h4 { color: var(--ink); }
-
-html[data-theme="light"] .rules-content .bill-card .bill-title,
-html[data-theme="light"] .rules-content .bill-card .bill-h,
-html[data-theme="light"] .rules-content .bill-card .bill-sub { border-left-color: rgba(48, 28, 90, 0.16); }
-
-html[data-theme="light"] .rules-content .bill-card p,
-html[data-theme="light"] .bill-card li { color: var(--ink-2); }
-
-html[data-theme="light"] .bill-card strong { color: var(--ink); }
-html[data-theme="light"] .bill-card li::marker { color: #8a80a0; }
-html[data-theme="light"] .bill-card hr { border-top-color: var(--line); }
-
-html[data-theme="light"] .bill-card code.num {
-  border-color: rgba(124, 77, 214, 0.22);
-  background: rgba(124, 77, 214, 0.08);
-  color: #5a2fb0;
-}
-
-html[data-theme="light"] .bill-note {
-  border-left-color: rgba(48, 28, 90, 0.2);
-  color: var(--ink-3);
-}
-
-html[data-theme="light"] .bill-note strong,
-html[data-theme="light"] .bill-note li { color: var(--ink-3); }
-
-html[data-theme="light"] .mention,
-html[data-theme="light"] .chan {
-  background: rgba(88, 101, 242, 0.12);
-  color: #4752c4;
-}
-
-html[data-theme="light"] .stamp {
-  background: rgba(48, 28, 90, 0.08);
-  color: var(--ink);
-}
-
-html[data-theme="light"] .bill-link { color: #2a6bd6; }
-html[data-theme="light"] .bill-cut { color: #8a80a0; }
-html[data-theme="light"] .bill-sign li { color: var(--ink-3); }
-
-html[data-theme="light"] .rules-content .bill-card p.bill-more {
-  border-top-color: var(--line);
-  color: var(--ink-3);
-}
-
-html[data-theme="light"] .bill-more a { color: #5a2fb0; }
-
-html[data-theme="light"] .rule-cta-ghost {
-  border-color: rgba(124, 77, 214, 0.45);
-  color: #5a2fb0;
-}
-
-html[data-theme="light"] .rule-cta-ghost:hover { background: rgba(124, 77, 214, 0.1); }
-
 /* ---------- Содержание правил и законопроектов ---------- */
 html[data-theme="light"] .rules-side .rules-toc a { color: var(--ink-2); }
 html[data-theme="light"] .rules-side .rules-toc a:hover { background: #f4f0fb; color: var(--ink); }
@@ -648,26 +513,3 @@ html[data-theme="light"] .toc-count { background: rgba(124, 77, 214, 0.12); colo
 html[data-theme="light"] .rules-toc .toc-n { background: #f0ebfa; color: #7a6f94; }
 html[data-theme="light"] .rules-toc a:hover .toc-n { color: #5a2fb0; }
 html[data-theme="light"] .rules-toc a.is-active .toc-n { background: #7c4dd6; color: #fff; }
-html[data-theme="light"] .rules-toc-bills small { color: #8a80a0; }
-
-html[data-theme="light"] .rules-toc-bills a .toc-n {
-  background: color-mix(in srgb, var(--bill) 24%, #fff);
-  color: color-mix(in srgb, var(--bill) 50%, #1c1628);
-}
-
-html[data-theme="light"] .rules-toc-bills a:hover .toc-n {
-  background: color-mix(in srgb, var(--bill) 34%, #fff);
-  color: color-mix(in srgb, var(--bill) 45%, #1c1628);
-}
-
-html[data-theme="light"] .rules-side .rules-toc-bills a.is-active {
-  border-color: color-mix(in srgb, var(--bill) 60%, #fff);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bill) 22%, #fff), #fff);
-  color: var(--ink);
-}
-
-html[data-theme="light"] .rules-side .rules-toc-bills a.is-active::before,
-html[data-theme="light"] .rules-toc-bills a.is-active .toc-n {
-  background: var(--bill);
-  color: #1c1628;
-}

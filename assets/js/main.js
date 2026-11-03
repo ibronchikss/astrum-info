@@ -186,23 +186,35 @@
     setInterval(loadStatus, STATUS_REFRESH_MS);
   }
 
-  // --- Главная: полоски в «Вопросах» плавно заполняются, когда блок виден -----
-  var faqSection = document.querySelector(".faq");
-  if (faqSection) {
-    var showFaq = function () { faqSection.classList.add("faq-in"); };
-    var reduceFaq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceFaq || !("IntersectionObserver" in window)) {
-      showFaq();
-    } else {
-      faqSection.classList.add("faq-ready");
-      var faqObserver = new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting) {
-          showFaq();
-          faqObserver.disconnect();
-        }
-      }, { threshold: 0.2 });
-      faqObserver.observe(faqSection);
-    }
+  // --- Главная: вопросы переключаются вкладками ---------------------------------
+  var fx = document.querySelector(".fx");
+  if (fx) {
+    var fxTabs = Array.prototype.slice.call(fx.querySelectorAll(".fx-tab"));
+    var fxPanels = Array.prototype.slice.call(fx.querySelectorAll(".fx-panel"));
+    var fxSelect = function (index, focus) {
+      fxTabs.forEach(function (tab, i) {
+        var on = i === index;
+        tab.classList.toggle("is-active", on);
+        tab.setAttribute("aria-selected", on ? "true" : "false");
+        tab.tabIndex = on ? 0 : -1;
+        fxPanels[i].classList.toggle("is-active", on);
+      });
+      if (focus) fxTabs[index].focus();
+    };
+    fx.classList.add("is-js");
+    fxTabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { fxSelect(i, false); });
+      tab.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") next = (i + 1) % fxTabs.length;
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = (i - 1 + fxTabs.length) % fxTabs.length;
+        if (e.key === "Home") next = 0;
+        if (e.key === "End") next = fxTabs.length - 1;
+        if (next === null) return;
+        e.preventDefault();
+        fxSelect(next, true);
+      });
+    });
   }
 
   // --- Главная: два скриншота под лентой меняются раз в 5 секунд ----------------
@@ -320,15 +332,12 @@
           unit.hidden = !hit;
           if (hit) { any = true; matched += 1; }
         });
-        // в блоках без пунктов (например, карточки законопроектов) раздел виден, если есть совпадение в заголовке
+        // раздел виден, если нашлось хотя бы одно совпадение
         var visible = !filtering || any;
         article.hidden = !visible;
         if (tocLinks[article.id]) tocLinks[article.id].hidden = !visible;
         if (visible) shown += 1;
       });
-      // заголовок блока законопроектов прячется, если ни один законопроект не подошёл под поиск
-      var billsHead = rulesContent.querySelector(".bills-head");
-      if (billsHead) billsHead.hidden = filtering && !rulesContent.querySelector("article.bill:not([hidden])");
       emptyRules.hidden = shown !== 0;
       punishButtons.forEach(function (button) {
         var on = button.getAttribute("data-punish") === activePunish;

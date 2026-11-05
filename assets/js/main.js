@@ -110,7 +110,7 @@
   // --- Главная: копирование IP сервера -------------------------------------
   var addressButton = document.querySelector(".server-address");
   if (addressButton) {
-    var label = addressButton.querySelector("small");
+    var label = addressButton.querySelector(".copy-pill") || addressButton.querySelector("small");
     var originalLabel = label ? label.textContent : "";
     var resetTimer = null;
 
@@ -144,11 +144,11 @@
     addressButton.addEventListener("click", function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(SERVER_IP).then(
-          function () { showCopied("СКОПИРОВАНО"); },
-          function () { showCopied(fallbackCopy() ? "СКОПИРОВАНО" : "НЕ УДАЛОСЬ"); }
+          function () { showCopied("Скопировано"); },
+          function () { showCopied(fallbackCopy() ? "Скопировано" : "Не удалось"); }
         );
       } else {
-        showCopied(fallbackCopy() ? "СКОПИРОВАНО" : "НЕ УДАЛОСЬ");
+        showCopied(fallbackCopy() ? "Скопировано" : "Не удалось");
       }
     });
   }
@@ -215,85 +215,6 @@
         fxSelect(next, true);
       });
     });
-  }
-
-  // --- Главная: два скриншота под лентой меняются раз в 5 секунд ----------------
-  // Каждый кадр хранит два слоя <img>: новый подгружается под видимым и плавно проявляется.
-  // Оба кадра всегда показывают разные картинки, и обе новые отличаются от тех, что были на экране.
-  var galleryBoxes = Array.prototype.slice.call(document.querySelectorAll(".gallery-item"));
-  if (galleryBoxes.length === 2) {
-    var SLIDE_EVERY_MS = 5000;
-    var SLIDES = [
-      { src: "assets/images/slide-castle.webp", alt: "Замок за садом с розами, фонарями и красным флагом" },
-      { src: "assets/images/slide-domes.webp", alt: "Бирюзовые купола и каменная стена над зелёной долиной" },
-      { src: "assets/images/slide-timber.webp", alt: "Фахверковые дома и цветочные клумбы у лестницы" },
-      { src: "assets/images/slide-sunset.webp", alt: "Город Astrum на закате: фахверковые дома и каменная башня над деревьями" },
-      { src: "assets/images/slide-crystal.webp", alt: "Дом с розовыми кристаллами и башня с водопадом" }
-    ];
-
-    var frames = galleryBoxes.map(function (box) {
-      var front = box.querySelector(".gallery-img");
-      var back = front.cloneNode(false);
-      back.classList.remove("is-active");
-      back.alt = "";
-      back.removeAttribute("src");
-      box.appendChild(back);
-      var current = -1;
-      SLIDES.forEach(function (slide, i) {
-        if (front.getAttribute("src") === slide.src) current = i;
-      });
-      return { front: front, back: back, index: current };
-    });
-
-    var showSlide = function (frame, index) {
-      var incoming = frame.back;
-      var outgoing = frame.front;
-      var done = false;
-      frame.index = index;
-      var reveal = function () {
-        if (done) return;
-        done = true;
-        incoming.classList.add("is-active");
-        outgoing.classList.remove("is-active");
-        frame.front = incoming;
-        frame.back = outgoing;
-      };
-      incoming.onload = reveal;
-      incoming.onerror = function () { done = true; };
-      incoming.alt = SLIDES[index].alt;
-      incoming.src = SLIDES[index].src;
-      if (incoming.complete && incoming.naturalWidth) reveal();
-    };
-
-    var nextSlides = function () {
-      var busy = frames.map(function (frame) { return frame.index; });
-      var free = [];
-      SLIDES.forEach(function (slide, i) {
-        if (busy.indexOf(i) === -1) free.push(i);
-      });
-      for (var i = free.length - 1; i > 0; i--) { // перемешиваем
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = free[i];
-        free[i] = free[j];
-        free[j] = tmp;
-      }
-      return free;
-    };
-
-    // подгружаем остальные кадры заранее, когда страница уже открылась
-    window.addEventListener("load", function () {
-      setTimeout(function () {
-        SLIDES.forEach(function (slide) { new Image().src = slide.src; });
-      }, 800);
-    });
-
-    setInterval(function () {
-      if (document.hidden) return;
-      var pick = nextSlides();
-      if (pick.length < 2) return;
-      showSlide(frames[0], pick[0]);
-      setTimeout(function () { showSlide(frames[1], pick[1]); }, 450);
-    }, SLIDE_EVERY_MS);
   }
 
   // --- Правила: поиск по пунктам и подсветка раздела в содержании -----------
@@ -530,4 +451,49 @@
       card.addEventListener("click", function () { openModal(card); });
     });
   }
+})();
+
+
+// --- Вики: кнопки «Копировать» (data-copy) ---------------------------------
+(function () {
+  "use strict";
+  var buttons = document.querySelectorAll("[data-copy]");
+  if (!buttons.length) return;
+
+  function fallbackCopy(text) {
+    var area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
+    document.body.removeChild(area);
+    return ok;
+  }
+
+  Array.prototype.forEach.call(buttons, function (button) {
+    var label = button.querySelector("span");
+    var original = label ? label.textContent : "";
+    var timer = null;
+    function show(text) {
+      if (!label) return;
+      label.textContent = text;
+      clearTimeout(timer);
+      timer = setTimeout(function () { label.textContent = original; }, 1800);
+    }
+    button.addEventListener("click", function () {
+      var text = button.getAttribute("data-copy");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(
+          function () { show("Скопировано"); },
+          function () { show(fallbackCopy(text) ? "Скопировано" : "Не удалось"); }
+        );
+      } else {
+        show(fallbackCopy(text) ? "Скопировано" : "Не удалось");
+      }
+    });
+  });
 })();

@@ -1,0 +1,1097 @@
+/*
+ * Новогоднее оформление.
+ * Подключено после light.css, всё включается/выключается атрибутом data-ny на <html>
+ * (кнопка со снежинкой в шапке; выбор хранится в localStorage "astrum-ny").
+ * Чтобы убрать тему совсем — удалите подключения newyear.css и newyear.js на страницах.
+ */
+
+:root {
+  --ny-red: #e63950;
+  --ny-green: #2fb87a;
+  --ny-gold: #ffc857;
+  --ny-ice: #8ec5ff;
+}
+
+/* ---------- Снегопад ---------- */
+.ny-snow {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+html[data-ny="off"] .ny-snow,
+html[data-ny="off"] .ny-garland,
+html[data-ny="off"] .ny-countdown,
+html[data-ny="off"] .ny-herd,
+html[data-ny="off"] .ny-santa,
+html[data-ny="off"] .ny-spark {
+  display: none;
+}
+
+/* ---------- Гирлянда ---------- */
+.ny-garland {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: 100%;
+  height: 46px;
+  overflow: hidden;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='46' viewBox='0 0 120 46'%3E%3Cpath d='M0 3Q60 37 120 3' fill='none' stroke='%23262230' stroke-width='2.2'/%3E%3C/svg%3E") repeat-x top left;
+}
+
+.ny-garland i {
+  position: absolute;
+  width: 10px;
+  height: 15px;
+  border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
+  background: var(--c);
+  box-shadow: 0 0 10px 2px var(--c), inset -2px -3px 3px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%);
+  animation: ny-twinkle 2.4s ease-in-out infinite;
+  animation-delay: var(--d);
+}
+
+.ny-garland i::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 6px;
+  height: 5px;
+  border-radius: 2px 2px 0 0;
+  background: #3a3544;
+  transform: translateX(-50%);
+}
+
+@keyframes ny-twinkle {
+  0%, 100% { opacity: 1; filter: brightness(1.1); }
+  50% { opacity: 0.45; filter: brightness(0.8); }
+}
+
+/* ---------- Шапка: колпак на логотипе ---------- */
+.site-header .brand-logo {
+  position: relative;
+}
+
+html:not([data-ny="off"]) .site-header .brand-logo::after {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: -10px;
+  width: 38px;
+  height: 34px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 58'%3E%3Cpath d='M8 46C10 22 24 6 46 6c-3 9-2 17 8 26 4 4 6 9 6 14z' fill='%23e63950'/%3E%3Cpath d='M8 46C10 22 24 6 46 6c-3 9-2 17 8 26' fill='none' stroke='%23b8243a' stroke-width='3' stroke-linecap='round'/%3E%3Crect x='2' y='42' width='60' height='14' rx='7' fill='%23fff'/%3E%3Ccircle cx='49' cy='6' r='6.5' fill='%23fff'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.35));
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+
+.site-header .brand-logo.footer-logo::after {
+  display: none;
+}
+
+/* ---------- Кнопка эффектов ---------- */
+.ny-toggle {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 1px solid var(--hd-btn-line);
+  border-radius: 999px;
+  background: var(--hd-btn-bg);
+  color: var(--ny-ice);
+  cursor: pointer;
+  transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.ny-toggle:hover {
+  border-color: var(--ny-ice);
+  transform: rotate(30deg);
+}
+
+html[data-ny="off"] .ny-toggle {
+  color: var(--hd-btn-ink);
+  opacity: 0.6;
+}
+
+/* ---------- Обратный отсчёт ---------- */
+.ny-countdown {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 10px 18px 10px 12px;
+  border: 1px solid rgba(255, 200, 87, 0.4);
+  border-radius: 20px;
+  background: linear-gradient(100deg, rgba(230, 57, 80, 0.16), rgba(47, 184, 122, 0.12));
+  color: var(--ink, #fff);
+}
+
+.ny-countdown-ico {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--ny-red), #ff7a59);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.ny-countdown-label {
+  color: var(--ink-3, #9d95ac);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ny-countdown-text {
+  display: grid;
+  gap: 2px;
+}
+
+.ny-countdown-time {
+  display: flex;
+  gap: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ny-countdown-time b {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ny-countdown-time small {
+  margin-left: 2px;
+  color: var(--ink-3, #9d95ac);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ny-countdown.is-done .ny-countdown-time b {
+  font-size: 17px;
+}
+
+/* ---------- Лента: красно-зелёные звёзды ---------- */
+.ticker-group > span:nth-of-type(5) {
+  color: var(--ny-gold);
+}
+
+/* ---------- Подвал: сугроб ---------- */
+.site-footer {
+  position: relative;
+}
+
+html:not([data-ny="off"]) .site-footer::before {
+  content: "";
+  position: absolute;
+  top: -22px;
+  left: 0;
+  width: 100%;
+  height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='22' viewBox='0 0 160 22' preserveAspectRatio='none'%3E%3Cpath d='M0 22V12Q20 0 40 12T80 12T120 12T160 12V22z' fill='%23eaf3ff'/%3E%3C/svg%3E") repeat-x bottom left / 160px 22px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+html[data-theme="light"]:not([data-ny="off"]) .site-footer::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='22' viewBox='0 0 160 22' preserveAspectRatio='none'%3E%3Cpath d='M0 22V12Q20 0 40 12T80 12T120 12T160 12V22z' fill='%23d6e6fb'/%3E%3C/svg%3E");
+}
+
+/* ---------- Тёмная тема: холодный отсвет ---------- */
+html[data-theme="dark"]:not([data-ny="off"]) .astrum-site {
+  background-image: radial-gradient(60% 40% at 50% 0%, rgba(80, 130, 220, 0.12), transparent 70%);
+  background-repeat: no-repeat;
+}
+
+/* ---------- Светлая тема ---------- */
+html[data-theme="light"] .ny-countdown {
+  border-color: rgba(255, 200, 87, 0.55);
+  background: linear-gradient(100deg, rgba(60, 14, 28, 0.72), rgba(10, 48, 36, 0.72));
+}
+
+html[data-theme="light"] .photo-hero .ny-countdown,
+html[data-theme="light"] .photo-hero .ny-countdown * {
+  color: #fff;
+}
+
+html[data-theme="light"] .photo-hero .ny-countdown-label { color: rgba(255, 255, 255, 0.75); }
+
+html[data-theme="light"] .ny-toggle {
+  color: #3b82d6;
+}
+
+html[data-theme="light"] .ny-garland {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='46' viewBox='0 0 120 46'%3E%3Cpath d='M0 3Q60 37 120 3' fill='none' stroke='%23463e5c' stroke-width='2.2'/%3E%3C/svg%3E");
+}
+
+/* ---------- Пиксельные олени ---------- */
+.ny-herd {
+  --u: 3;
+  position: fixed;
+  left: 0;
+  bottom: 2px;
+  z-index: 45;
+  display: none;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ny-herd.run-r,
+.ny-herd.run-l {
+  display: flex;
+}
+
+.ny-herd.run-r { animation: ny-run-r 15s linear forwards; }
+.ny-herd.run-l { animation: ny-run-l 15s linear forwards; }
+
+.ny-deer {
+  flex: none;
+  width: calc(36px * var(--u));
+  height: calc(36px * var(--u));
+  margin-right: calc(-4px * var(--u));
+  background: url("../images/ny/reindeer.png") 0 0 / calc(144px * var(--u)) calc(36px * var(--u)) no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.18));
+  animation: ny-gallop 0.44s steps(4) infinite, ny-hop 0.44s ease-in-out infinite;
+}
+
+.ny-deer:nth-child(2) { animation-delay: -0.11s, -0.11s; }
+.ny-deer:nth-child(3) { animation-delay: -0.22s, -0.22s; }
+.ny-deer.lead {
+  background-image: url("../images/ny/reindeer-lead.png");
+  animation-delay: -0.33s, -0.33s;
+}
+
+@keyframes ny-gallop {
+  to { background-position: calc(-144px * var(--u)) 0; }
+}
+
+@keyframes ny-hop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes ny-run-r {
+  from { transform: translateX(-480px); }
+  to { transform: translateX(100vw); }
+}
+
+@keyframes ny-run-l {
+  from { transform: translateX(100vw) scaleX(-1); }
+  to { transform: translateX(-480px) scaleX(-1); }
+}
+
+/* ---------- Дед Мороз на санях ---------- */
+.ny-santa {
+  --u: 3;
+  position: fixed;
+  left: 0;
+  top: max(112px, 15vh);
+  z-index: 46;
+  display: none;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ny-santa.fly-r,
+.ny-santa.fly-l {
+  display: block;
+}
+
+.ny-santa.fly-r { animation: ny-fly-r 19s linear forwards; }
+.ny-santa.fly-l { animation: ny-fly-l 19s linear forwards; }
+
+.ny-santa-in {
+  display: flex;
+  align-items: flex-end;
+  animation: ny-wave 3.4s ease-in-out infinite;
+}
+
+/* сияющий след за санями */
+.ny-trail {
+  flex: none;
+  width: 240px;
+  height: 12px;
+  margin-right: -8px;
+  margin-bottom: calc(24px * var(--u));
+  background:
+    radial-gradient(circle, #ffe9a0 0 2px, transparent 2.6px) 0 0 / 16px 12px repeat-x,
+    radial-gradient(circle, #8ec5ff 0 1.5px, transparent 2px) 8px 4px / 16px 12px repeat-x;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000);
+  mask-image: linear-gradient(90deg, transparent, #000);
+  filter: drop-shadow(0 0 4px rgba(255, 220, 130, 0.9));
+  animation: ny-twinkle 0.9s ease-in-out infinite;
+}
+
+.ny-sleigh {
+  flex: none;
+  width: calc(48px * var(--u));
+  height: calc(32px * var(--u));
+  margin-right: calc(10px * var(--u));
+  margin-bottom: calc(10px * var(--u));
+  background: url("../images/ny/sleigh.png") center / 100% 100% no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.14));
+}
+
+/* упряжь от саней к оленям */
+.ny-santa-in {
+  position: relative;
+}
+
+.ny-santa-in::before {
+  content: "";
+  position: absolute;
+  left: calc(240px + 40px * var(--u));
+  right: calc(30px * var(--u));
+  bottom: calc(22px * var(--u));
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--ny-gold) 0 6px, transparent 6px 9px);
+  opacity: 0.9;
+}
+
+@keyframes ny-wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(18px); }
+}
+
+@keyframes ny-fly-r {
+  from { transform: translateX(-900px); }
+  to { transform: translateX(100vw); }
+}
+
+@keyframes ny-fly-l {
+  from { transform: translateX(100vw) scaleX(-1); }
+  to { transform: translateX(-900px) scaleX(-1); }
+}
+
+/* ---------- Искры за курсором ---------- */
+.ny-spark {
+  position: fixed;
+  z-index: 70;
+  margin: -8px 0 0 -6px;
+  line-height: 1;
+  pointer-events: none;
+  text-shadow: 0 0 6px currentColor;
+  animation: ny-spark-fall 0.9s ease-out forwards;
+}
+
+@keyframes ny-spark-fall {
+  from { opacity: 1; transform: translate(0, 0) scale(1) rotate(0); }
+  to { opacity: 0; transform: translate(var(--dx, 0), 26px) scale(0.4) rotate(120deg); }
+}
+
+/* ---------- Иней по углам экрана ---------- */
+html:not([data-ny="off"]) .astrum-site::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  pointer-events: none;
+  background:
+    radial-gradient(70% 38% at 0% 100%, rgba(190, 220, 255, 0.1), transparent 70%),
+    radial-gradient(70% 38% at 100% 100%, rgba(190, 220, 255, 0.1), transparent 70%);
+}
+
+html[data-theme="light"]:not([data-ny="off"]) .astrum-site::after {
+  background:
+    radial-gradient(70% 38% at 0% 100%, rgba(120, 170, 240, 0.14), transparent 70%),
+    radial-gradient(70% 38% at 100% 100%, rgba(120, 170, 240, 0.14), transparent 70%);
+}
+
+/* ---------- Заголовки разделов: леденцовая черта ---------- */
+html:not([data-ny="off"]) .section-heading h2::after,
+html:not([data-ny="off"]) .faq-links-head h3::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 6px;
+  margin-top: 14px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(45deg, var(--ny-red) 0 6px, #fff 6px 12px);
+  box-shadow: 0 0 0 1px rgba(230, 57, 80, 0.35);
+}
+
+/* ---------- Видео под лентой: праздничная рамка ---------- */
+html:not([data-ny="off"]) .video-section {
+  position: relative;
+}
+
+html:not([data-ny="off"]) .video-frame {
+  border: 3px solid transparent;
+  background:
+    linear-gradient(#14121a, #14121a) padding-box,
+    repeating-linear-gradient(45deg, var(--ny-red) 0 14px, #ffffff 14px 28px) border-box;
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8), 0 0 40px -6px rgba(230, 57, 80, 0.35);
+}
+
+html[data-theme="light"]:not([data-ny="off"]) .video-frame {
+  background:
+    linear-gradient(#e9e3f6, #e9e3f6) padding-box,
+    repeating-linear-gradient(45deg, var(--ny-red) 0 14px, #ffffff 14px 28px) border-box;
+  box-shadow: 0 30px 70px -34px rgba(60, 30, 120, 0.5), 0 0 40px -10px rgba(230, 57, 80, 0.3);
+}
+
+/* огоньки над рамкой */
+html:not([data-ny="off"]) .video-section::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 28px;
+  right: 28px;
+  z-index: 2;
+  height: 9px;
+  background:
+    radial-gradient(circle at 5px 4px, var(--ny-red) 0 3.5px, transparent 4px) 0 0 / 96px 9px repeat-x,
+    radial-gradient(circle at 5px 4px, var(--ny-gold) 0 3.5px, transparent 4px) 32px 0 / 96px 9px repeat-x,
+    radial-gradient(circle at 5px 4px, var(--ny-green) 0 3.5px, transparent 4px) 64px 0 / 96px 9px repeat-x;
+  filter: drop-shadow(0 0 4px rgba(255, 200, 87, 0.8));
+  pointer-events: none;
+  animation: ny-twinkle 2.2s ease-in-out infinite;
+}
+
+/* сугроб на нижнем краю рамки */
+html:not([data-ny="off"]) .video-section::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 28px;
+  z-index: 2;
+  height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='22' viewBox='0 0 160 22' preserveAspectRatio='none'%3E%3Cpath d='M0 22V12Q20 0 40 12T80 12T120 12T160 12V22z' fill='%23eaf3ff'/%3E%3C/svg%3E") repeat-x bottom left / 160px 22px;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* ---------- Общее: звёздочки у подзаголовков, лес в подвале ---------- */
+html:not([data-ny="off"]) .inner-page > .eyebrow::before,
+html:not([data-ny="off"]) .section-heading .eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-right: 8px;
+  vertical-align: -2px;
+  background: url("../images/ny/star.png") center / 13px 13px no-repeat;
+  image-rendering: pixelated;
+}
+
+html:not([data-ny="off"]) .site-footer::after {
+  content: "";
+  position: absolute;
+  top: -70px;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 56px;
+  background: url("../images/ny/forest.png") repeat-x left bottom / 688px 56px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+html:not([data-ny="off"]) .site-footer::before {
+  z-index: 2;
+}
+
+/* Мордашка раздела справа от заголовка: общие параметры, картинки — у каждой страницы свои */
+html:not([data-ny="off"]) .inner-page {
+  position: relative;
+}
+
+html:not([data-ny="off"]) .inner-page::before {
+  content: "";
+  position: absolute;
+  top: 38px;
+  right: 0;
+  width: 200px;
+  height: 140px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  animation: ny-bob 4s ease-in-out infinite;
+}
+
+@keyframes ny-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ===== Главное: северное сияние и звёзды ===== */
+html:not([data-ny="off"])[data-ny-page="home"] .hero {
+  isolation: isolate;
+}
+
+html:not([data-ny="off"])[data-ny-page="home"] .hero::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: -10%;
+  z-index: -1;
+  width: 120%;
+  height: 460px;
+  background:
+    radial-gradient(40% 55% at 22% 30%, rgba(47, 184, 122, 0.22), transparent 70%),
+    radial-gradient(38% 50% at 55% 18%, rgba(74, 168, 255, 0.2), transparent 70%),
+    radial-gradient(36% 50% at 82% 34%, rgba(199, 125, 255, 0.2), transparent 70%);
+  filter: blur(18px);
+  opacity: 0.9;
+  pointer-events: none;
+  animation: ny-aurora 14s ease-in-out infinite alternate;
+}
+
+@keyframes ny-aurora {
+  from { transform: translateX(-3%) scaleY(0.95); }
+  to { transform: translateX(3%) scaleY(1.08); }
+}
+
+html:not([data-ny="off"])[data-ny-page="home"] .hero-visual::before,
+html:not([data-ny="off"])[data-ny-page="home"] .hero-visual::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  width: 26px;
+  height: 26px;
+  background: url("../images/ny/star.png") center / 26px 26px no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  animation: ny-spark 2.6s steps(2) infinite;
+}
+
+html:not([data-ny="off"])[data-ny-page="home"] .hero-visual::before { top: 6%; left: 10%; }
+html:not([data-ny="off"])[data-ny-page="home"] .hero-visual::after {
+  top: 22%;
+  right: 12%;
+  width: 39px;
+  height: 39px;
+  background-size: 39px 39px;
+  animation-delay: -1.3s;
+}
+
+@keyframes ny-spark {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(0.7); }
+}
+
+html:not([data-ny="off"])[data-ny-page="home"] .feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 5px;
+  border-radius: 0 0 6px 6px;
+  background: repeating-linear-gradient(90deg, var(--ny-red) 0 14px, var(--ny-gold) 14px 28px, var(--ny-green) 28px 42px);
+  opacity: 0.85;
+}
+
+html:not([data-ny="off"])[data-ny-page="home"] .world-banner.pixel-world {
+  position: relative;
+  padding-bottom: 76px;
+}
+
+html:not([data-ny="off"])[data-ny-page="home"] .world-banner::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  background: url("../images/ny/forest.png") repeat-x left bottom / 688px 56px;
+  image-rendering: pixelated;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* ===== Магазин: подарки и бантики ===== */
+html:not([data-ny="off"])[data-ny-page="shop"] .inner-page::before {
+  width: 210px;
+  height: 150px;
+  background-image:
+    url("../images/ny/gift-blue.png"),
+    url("../images/ny/gift-green.png"),
+    url("../images/ny/gift-red.png");
+  background-size: 64px 64px, 80px 80px, 112px 112px;
+  background-position: 70px 0, 0 70px, 98px 38px;
+}
+
+html:not([data-ny="off"])[data-ny-page="shop"] .product-card {
+  position: relative;
+}
+
+html:not([data-ny="off"])[data-ny-page="shop"] .product-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--ny-red) 0 16px, var(--ny-gold) 16px 32px, var(--ny-green) 32px 48px);
+  pointer-events: none;
+}
+
+html:not([data-ny="off"])[data-ny-page="shop"] .product-card::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  background: url("../images/ny/gift-red.png") center / 32px 32px no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  transition: transform 0.25s steps(3);
+}
+
+html:not([data-ny="off"])[data-ny-page="shop"] .product-card:nth-child(3n + 2)::after {
+  background-image: url("../images/ny/gift-green.png");
+}
+
+html:not([data-ny="off"])[data-ny-page="shop"] .product-card:nth-child(3n)::after {
+  background-image: url("../images/ny/gift-blue.png");
+}
+
+html:not([data-ny="off"])[data-ny-page="shop"] .product-card:hover::after {
+  transform: translateY(-4px) rotate(-8deg);
+}
+
+/* ===== Правила: леденцовая полоска и остролист ===== */
+html:not([data-ny="off"])[data-ny-page="rules"] .inner-page::before {
+  width: 190px;
+  height: 130px;
+  background-image:
+    url("../images/ny/cane.png"),
+    url("../images/ny/holly.png"),
+    url("../images/ny/bell.png"),
+    url("../images/ny/cane.png");
+  background-size: 50px 80px, 96px 72px, 56px 64px, 40px 64px;
+  background-position: 0 40px, 36px 58px, 110px 0, 164px 56px;
+  background-position: 0 44px, 40px 58px, 118px 4px, 150px 60px;
+}
+
+html:not([data-ny="off"])[data-ny-page="rules"] .rule-section {
+  position: relative;
+}
+
+html:not([data-ny="off"])[data-ny-page="rules"] .rule-section::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 0;
+  width: 5px;
+  border-radius: 0 4px 4px 0;
+  background: repeating-linear-gradient(45deg, var(--ny-red) 0 6px, #fff 6px 12px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+html:not([data-ny="off"])[data-ny-page="rules"] .rules-toc .toc-n {
+  position: relative;
+}
+
+html:not([data-ny="off"])[data-ny-page="rules"] .rules-toc::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  bottom: -14px;
+  width: 64px;
+  height: 48px;
+  background: url("../images/ny/holly.png") center / 64px 48px no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* ===== Вики: сосульки и снежинки ===== */
+html:not([data-ny="off"])[data-ny-page="wiki"] .inner-page::before {
+  width: 190px;
+  height: 150px;
+  background-image:
+    url("../images/ny/flake.png"),
+    url("../images/ny/flake.png"),
+    url("../images/ny/star.png");
+  background-size: 104px 104px, 52px 52px, 39px 39px;
+  background-position: 70px 14px, 10px 86px, 150px 98px;
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .feature-card {
+  position: relative;
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 14px;
+  height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='20' viewBox='0 0 56 20'%3E%3Cpath d='M0 0h56v3H0z M2 3h12l-6 17z M20 3h9l-4.5 10z M34 3h11l-5.5 14z' fill='%23dff0ff'/%3E%3C/svg%3E") repeat-x top left;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* ===== Навигация: ёлки и звёзды-маячки ===== */
+html:not([data-ny="off"])[data-ny-page="navigation"] .inner-page::before {
+  width: 220px;
+  height: 150px;
+  background-image:
+    url("../images/ny/tree.png"),
+    url("../images/ny/tree.png"),
+    url("../images/ny/tree.png");
+  background-size: 120px 156px, 80px 104px, 60px 78px;
+  background-position: 70px 0, 0 46px, 160px 70px;
+}
+
+html:not([data-ny="off"])[data-ny-page="navigation"] .resource-card::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  right: 54px;
+  width: 26px;
+  height: 26px;
+  background: url("../images/ny/star.png") center / 26px 26px no-repeat;
+  image-rendering: pixelated;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+html:not([data-ny="off"])[data-ny-page="navigation"] .resource-card:hover::after {
+  animation: ny-spark 0.9s steps(2) infinite;
+  opacity: 1;
+}
+
+html:not([data-ny="off"])[data-ny-page="navigation"] .resource-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 16px;
+  right: 16px;
+  height: 9px;
+  border-radius: 0 0 9px 9px;
+  background: #eaf3ff;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+/* ===== Прочее: снеговик, какао и тёплые огоньки ===== */
+html:not([data-ny="off"])[data-ny-page="more"] .inner-page::before {
+  width: 200px;
+  height: 150px;
+  background-image:
+    url("../images/ny/snowman.png"),
+    url("../images/ny/mug.png");
+  background-size: 110px 140px, 64px 64px;
+  background-position: 90px 4px, 10px 84px;
+}
+
+html:not([data-ny="off"])[data-ny-page="more"] .support-banner {
+  position: relative;
+}
+
+html:not([data-ny="off"])[data-ny-page="more"] .support-banner::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 18px;
+  right: 18px;
+  height: 9px;
+  background:
+    radial-gradient(circle at 5px 4px, var(--ny-red) 0 3.5px, transparent 4px) 0 0 / 96px 9px repeat-x,
+    radial-gradient(circle at 5px 4px, var(--ny-gold) 0 3.5px, transparent 4px) 32px 0 / 96px 9px repeat-x,
+    radial-gradient(circle at 5px 4px, var(--ny-green) 0 3.5px, transparent 4px) 64px 0 / 96px 9px repeat-x;
+  filter: drop-shadow(0 0 4px rgba(255, 200, 87, 0.8));
+  pointer-events: none;
+  animation: ny-twinkle 2.2s ease-in-out infinite;
+}
+
+html:not([data-ny="off"])[data-ny-page="more"] .faq details[open] {
+  border-bottom-color: rgba(255, 200, 87, 0.45);
+}
+
+/* ---------- Светлая тема ---------- */
+html[data-theme="light"][data-ny-page="home"] .hero::before {
+  opacity: 0.55;
+}
+
+html[data-theme="light"][data-ny-page="wiki"] .feature-card::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='20' viewBox='0 0 56 20'%3E%3Cpath d='M0 0h56v3H0z M2 3h12l-6 17z M20 3h9l-4.5 10z M34 3h11l-5.5 14z' fill='%23b9d4f5'/%3E%3C/svg%3E");
+}
+
+html[data-theme="light"][data-ny-page="navigation"] .resource-card::before {
+  background: #cfe0f7;
+}
+
+html[data-theme="light"] .ny-deer {
+  filter: drop-shadow(0 4px 0 rgba(60, 40, 90, 0.14));
+}
+
+/* ---------- Узкие экраны ---------- */
+@media (max-width: 980px) {
+  .ny-toggle {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 860px) {
+  html:not([data-ny="off"]) .inner-page::before {
+    display: none;
+  }
+
+  .ny-herd,
+  .ny-santa {
+    --u: 2;
+  }
+
+  .ny-trail {
+    width: 140px;
+  }
+
+  .ny-santa-in::before {
+    left: calc(140px + 40px * var(--u));
+  }
+
+  html:not([data-ny="off"]) .video-section::after {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .ny-toggle {
+    display: none;
+  }
+
+  .ny-countdown {
+    gap: 10px;
+    padding-right: 14px;
+  }
+
+  .ny-countdown-time {
+    gap: 9px;
+  }
+
+  html:not([data-ny="off"]) .site-header .brand-logo::after {
+    width: 30px;
+    height: 27px;
+    top: -12px;
+    left: -8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ny-garland i,
+  .ny-deer,
+  .ny-trail,
+  .ny-santa-in,
+  html:not([data-ny="off"]) .inner-page::before,
+  html:not([data-ny="off"])[data-ny-page="home"] .hero::before,
+  html:not([data-ny="off"])[data-ny-page="home"] .hero-visual::before,
+  html:not([data-ny="off"])[data-ny-page="home"] .hero-visual::after,
+  html:not([data-ny="off"])[data-ny-page="more"] .support-banner::before {
+    animation: none;
+  }
+
+  .ny-herd,
+  .ny-santa,
+  .ny-spark,
+  html:not([data-ny="off"]) .video-section::before {
+    animation: none;
+  }
+
+  .ny-herd,
+  .ny-santa,
+  .ny-spark {
+    display: none !important;
+  }
+
+  .ny-toggle {
+    transition: none;
+  }
+
+  .ny-toggle:hover {
+    transform: none;
+  }
+}
+
+/* ===== Вики: статья «Основная информация» — подарки, сосульки, сугроб ===== */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-side-card::before,
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 14px;
+  z-index: 2;
+  height: 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='20' viewBox='0 0 56 20'%3E%3Cpath d='M0 0h56v3H0z M2 3h12l-6 17z M20 3h9l-4.5 10z M34 3h11l-5.5 14z' fill='%23dff0ff'/%3E%3C/svg%3E") repeat-x top left;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-article { padding-top: 38px; }
+
+/* сугроб внизу фото-баннера и звезда в углу */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-banner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  z-index: 2;
+  height: 22px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='22' viewBox='0 0 96 22'%3E%3Cpath d='M0 22V15Q12 4 26 12T52 11T78 9T96 15V22Z' fill='%23eef6ff'/%3E%3C/svg%3E") repeat-x bottom left / 96px 22px;
+  pointer-events: none;
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-banner figcaption { padding-bottom: 34px; }
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-banner::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  width: 39px;
+  height: 39px;
+  background: url("../images/ny/star.png") center / 39px 39px no-repeat;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 8px rgba(255, 200, 87, 0.8));
+  animation: ny-bob 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* заголовки: золотая плитка */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-ico {
+  border-color: rgba(255, 200, 87, 0.45);
+  background: linear-gradient(145deg, rgba(255, 200, 87, 0.28), rgba(142, 197, 255, 0.18));
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-sec > h3::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  margin-left: 4px;
+  background: repeating-linear-gradient(90deg, var(--ny-red) 0 14px, var(--ny-gold) 14px 28px, var(--ny-green) 28px 42px);
+  opacity: 0.55;
+  border-radius: 2px;
+}
+
+/* преимущества: каждый пункт — подарок */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li {
+  border-left: 3px solid var(--ny-red);
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li:nth-child(3n + 2) { border-left-color: var(--ny-green); }
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li:nth-child(3n) { border-left-color: var(--ny-ice); }
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li::before {
+  content: "";
+  width: 44px;
+  height: 44px;
+  top: 14px;
+  background: url("../images/ny/gift-red.png") center / 44px 44px no-repeat;
+  image-rendering: pixelated;
+  transition: transform 0.25s steps(3);
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li:nth-child(3n + 2)::before { background-image: url("../images/ny/gift-green.png"); }
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li:nth-child(3n)::before { background-image: url("../images/ny/gift-blue.png"); }
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-perks li:hover::before { transform: translateY(-4px) rotate(-8deg); }
+
+/* разделитель со звездой */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-divider::after {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  background: var(--surface, #1b1922) url("../images/ny/star.png") center / 22px 22px no-repeat;
+  image-rendering: pixelated;
+}
+
+/* IP: леденцовая рамка */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-ip {
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--surface-2, #221e2c), var(--surface-2, #221e2c)) padding-box,
+    repeating-linear-gradient(135deg, var(--ny-red) 0 10px, #ffffff 10px 20px) border-box;
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-core li::before {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin: -2px 6px -2px -2px;
+  background: url("../images/ny/star.png") center / 14px 14px no-repeat;
+  image-rendering: pixelated;
+}
+
+/* меню: звезда у открытой статьи и снеговик внизу */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-link.is-active {
+  border-color: rgba(142, 197, 255, 0.55);
+  background: linear-gradient(90deg, rgba(142, 197, 255, 0.2), rgba(142, 197, 255, 0.05));
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-link.is-active::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  background: url("../images/ny/star.png") center / 16px 16px no-repeat;
+  image-rendering: pixelated;
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-side-card { padding-bottom: 76px; }
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-side-note { max-width: 150px; }
+
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-side-card::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  bottom: 10px;
+  width: 66px;
+  height: 84px;
+  background: url("../images/ny/snowman.png") center / 66px 84px no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-ny="off"])[data-ny-page="wiki"] .wk-banner::before { animation: none; }
+}
+
+/* ===== Вики: ссылки — гирлянда над названиями групп ===== */
+html:not([data-ny="off"])[data-ny-page="wiki"] .wk-lgroup h4::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin-top: 6px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--ny-red) 0 14px, var(--ny-gold) 14px 28px, var(--ny-green) 28px 42px);
+}
+
+html:not([data-ny="off"])[data-ny-page="wiki"] a.wk-pill:hover { border-color: var(--ny-gold); }
+
+@media (max-width: 760px) {
+  html:not([data-ny="off"])[data-ny-page="wiki"] .wk-side-card { padding-bottom: 70px; }
+}

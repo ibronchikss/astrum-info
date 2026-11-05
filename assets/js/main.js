@@ -28,33 +28,32 @@
     return node;
   }
 
-  // --- Шапка: при прокрутке сжимается в закруглённую «капсулу» (стили — extra.css) --
+  // --- Шапка: всегда закруглённая «капсула» (стили — extra.css, класс is-scrolled) --
   var siteHeader = document.querySelector(".site-header");
   if (siteHeader) {
-    var headerTicking = false;
-    var updateHeader = function (instant) {
-      headerTicking = false;
-      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-      var shrunk = siteHeader.classList.contains("is-scrolled");
-      // небольшой гистерезис, чтобы шапка не «дрожала» на границе
-      var want = shrunk ? y > 8 : y > 32;
-      if (want === shrunk) return;
-      if (instant === true) {
-        siteHeader.style.transition = "none";
-        siteHeader.classList.toggle("is-scrolled", want);
-        void siteHeader.offsetWidth;
-        siteHeader.style.transition = "";
-      } else {
-        siteHeader.classList.toggle("is-scrolled", want);
-      }
+    siteHeader.classList.add("is-scrolled");
+  }
+
+  // --- Первый заход на главную: шапка появляется, когда начинают прокручивать вниз ---
+  // Класс first-visit ставит скрипт в <head> главной (если в localStorage ещё нет метки astrum-nav-seen).
+  var rootEl = document.documentElement;
+  if (rootEl.classList.contains("first-visit")) {
+    var revealHeader = function () {
+      rootEl.classList.remove("first-visit");
+      try { localStorage.setItem("astrum-nav-seen", "1"); } catch (err) { /* без хранилища — просто покажем */ }
+      window.removeEventListener("scroll", onFirstScroll);
+      window.removeEventListener("keydown", revealHeader);
+      window.removeEventListener("focusin", revealHeader);
     };
-    window.addEventListener("scroll", function () {
-      if (!headerTicking) {
-        headerTicking = true;
-        window.requestAnimationFrame(updateHeader);
-      }
-    }, { passive: true });
-    updateHeader(true); // страница могла открыться уже прокрученной (перезагрузка, переход по якорю)
+    var onFirstScroll = function () {
+      if ((window.pageYOffset || rootEl.scrollTop || 0) > 40) revealHeader();
+    };
+    window.addEventListener("scroll", onFirstScroll, { passive: true });
+    window.addEventListener("keydown", revealHeader); // клавиатура (Tab, стрелки) — тоже показать
+    window.addEventListener("focusin", revealHeader);
+    onFirstScroll(); // страница могла открыться уже прокрученной
+    // если страница не прокручивается (короткий экран), шапку нужно показать сразу
+    if (rootEl.scrollHeight <= window.innerHeight + 40) revealHeader();
   }
 
   // --- Мобильное меню -------------------------------------------------------
@@ -65,10 +64,21 @@
       var open = nav.classList.toggle("open");
       menuButton.setAttribute("aria-expanded", open ? "true" : "false");
     });
+    var closeMenu = function () {
+      nav.classList.remove("open");
+      menuButton.setAttribute("aria-expanded", "false");
+    };
     nav.addEventListener("click", function (e) {
-      if (e.target.closest("a")) {
-        nav.classList.remove("open");
-        menuButton.setAttribute("aria-expanded", "false");
+      if (e.target.closest("a")) closeMenu();
+    });
+    // меню свёрнуто на всех экранах: закрывается кликом мимо и клавишей Esc
+    document.addEventListener("click", function (e) {
+      if (nav.classList.contains("open") && !nav.contains(e.target) && !menuButton.contains(e.target)) closeMenu();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("open")) {
+        closeMenu();
+        menuButton.focus();
       }
     });
   }

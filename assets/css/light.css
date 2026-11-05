@@ -711,3 +711,21 @@ html[data-theme="light"] .astrum-site .site-header.is-scrolled .main-nav a.activ
       linear-gradient(rgba(251, 245, 228, 0.2) 0%, rgba(251, 245, 228, 0.1) 60%, rgba(251, 245, 228, 0.9) 94%, #fbf5e4 100%);
   }
 }
+
+/* Выпадающее меню (телефон/планшет/узкий экран) и значки в светлой теме */
+@media (max-width: 1240px) {
+  html[data-theme="light"] .astrum-site .site-header .main-nav.open,
+  html[data-theme="light"] .astrum-site .site-header.is-scrolled .main-nav.open {
+    background: rgba(255, 252, 243, 0.99);
+    border-color: rgba(226, 60, 186, 0.35);
+    box-shadow: 0 24px 60px -18px rgba(60, 40, 10, 0.35);
+  }
+
+  html[data-theme="light"] .astrum-site .site-header .main-nav.open a { color: #4a4060; }
+  html[data-theme="light"] .astrum-site .site-header .main-nav.open a.active { color: #1c1628; }
+}
+
+html[data-theme="light"] .nav-icon { color: #d41fa9; }
+
+html[data-theme="light"] .astrum-home .photo-hero .server-address small { color: #5b5170; text-shadow: none; }
+html[data-theme="light"] .astrum-home .photo-hero .server-address strong { text-shadow: none; }

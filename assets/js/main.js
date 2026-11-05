@@ -531,4 +531,55 @@
       card.addEventListener("click", function () { openModal(card); });
     });
   }
+
+  // --- Мобильная версия: сворачиваемое «Содержание» в правилах и кнопка «Наверх» ---
+  var phoneQuery = window.matchMedia("(max-width: 760px)");
+  var tocBlocks = Array.prototype.slice.call(document.querySelectorAll(".rules-toc"));
+  var setToc = function (toc, collapsed) {
+    toc.classList.toggle("toc-collapsed", collapsed);
+    var head = toc.querySelector(".eyebrow");
+    if (head) head.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  };
+  tocBlocks.forEach(function (toc) {
+    var head = toc.querySelector(".eyebrow");
+    if (!head) return;
+    head.setAttribute("role", "button");
+    head.setAttribute("tabindex", "0");
+    var toggle = function () {
+      if (phoneQuery.matches) setToc(toc, !toc.classList.contains("toc-collapsed"));
+    };
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    });
+    toc.addEventListener("click", function (e) {
+      if (phoneQuery.matches && e.target.closest("a")) setToc(toc, true); // после перехода к разделу список сворачивается
+    });
+  });
+  var syncToc = function () {
+    tocBlocks.forEach(function (toc) { setToc(toc, phoneQuery.matches); });
+  };
+  syncToc();
+  if (phoneQuery.addEventListener) phoneQuery.addEventListener("change", syncToc);
+  else if (phoneQuery.addListener) phoneQuery.addListener(syncToc);
+
+  var toTop = document.createElement("button");
+  toTop.type = "button";
+  toTop.className = "to-top";
+  toTop.setAttribute("aria-label", "Наверх");
+  toTop.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"></path></svg>';
+  document.body.appendChild(toTop);
+  var topTicking = false;
+  var updateToTop = function () {
+    topTicking = false;
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+    toTop.classList.toggle("is-visible", y > 700);
+  };
+  window.addEventListener("scroll", function () {
+    if (!topTicking) { topTicking = true; window.requestAnimationFrame(updateToTop); }
+  }, { passive: true });
+  toTop.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  updateToTop();
 })();

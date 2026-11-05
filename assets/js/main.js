@@ -110,7 +110,7 @@
   // --- Главная: копирование IP сервера -------------------------------------
   var addressButton = document.querySelector(".server-address");
   if (addressButton) {
-    var label = addressButton.querySelector(".copy-pill") || addressButton.querySelector("small");
+    var label = addressButton.querySelector("small");
     var originalLabel = label ? label.textContent : "";
     var resetTimer = null;
 
@@ -144,11 +144,11 @@
     addressButton.addEventListener("click", function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(SERVER_IP).then(
-          function () { showCopied("Скопировано"); },
-          function () { showCopied(fallbackCopy() ? "Скопировано" : "Не удалось"); }
+          function () { showCopied("СКОПИРОВАНО"); },
+          function () { showCopied(fallbackCopy() ? "СКОПИРОВАНО" : "НЕ УДАЛОСЬ"); }
         );
       } else {
-        showCopied(fallbackCopy() ? "Скопировано" : "Не удалось");
+        showCopied(fallbackCopy() ? "СКОПИРОВАНО" : "НЕ УДАЛОСЬ");
       }
     });
   }
@@ -186,35 +186,102 @@
     setInterval(loadStatus, STATUS_REFRESH_MS);
   }
 
-  // --- Главная: вопросы переключаются вкладками ---------------------------------
-  var fx = document.querySelector(".fx");
-  if (fx) {
-    var fxTabs = Array.prototype.slice.call(fx.querySelectorAll(".fx-tab"));
-    var fxPanels = Array.prototype.slice.call(fx.querySelectorAll(".fx-panel"));
-    var fxSelect = function (index, focus) {
-      fxTabs.forEach(function (tab, i) {
-        var on = i === index;
-        tab.classList.toggle("is-active", on);
-        tab.setAttribute("aria-selected", on ? "true" : "false");
-        tab.tabIndex = on ? 0 : -1;
-        fxPanels[i].classList.toggle("is-active", on);
+  // --- Главная: полоски в «Вопросах» плавно заполняются, когда блок виден -----
+  var faqSection = document.querySelector(".faq");
+  if (faqSection) {
+    var showFaq = function () { faqSection.classList.add("faq-in"); };
+    var reduceFaq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceFaq || !("IntersectionObserver" in window)) {
+      showFaq();
+    } else {
+      faqSection.classList.add("faq-ready");
+      var faqObserver = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          showFaq();
+          faqObserver.disconnect();
+        }
+      }, { threshold: 0.2 });
+      faqObserver.observe(faqSection);
+    }
+  }
+
+  // --- Главная: два скриншота под лентой меняются раз в 5 секунд ----------------
+  // Каждый кадр хранит два слоя <img>: новый подгружается под видимым и плавно проявляется.
+  // Оба кадра всегда показывают разные картинки, и обе новые отличаются от тех, что были на экране.
+  var galleryBoxes = Array.prototype.slice.call(document.querySelectorAll(".gallery-item"));
+  if (galleryBoxes.length === 2) {
+    var SLIDE_EVERY_MS = 5000;
+    var SLIDES = [
+      { src: "assets/images/slide-castle.webp", alt: "Замок за садом с розами, фонарями и красным флагом" },
+      { src: "assets/images/slide-domes.webp", alt: "Бирюзовые купола и каменная стена над зелёной долиной" },
+      { src: "assets/images/slide-timber.webp", alt: "Фахверковые дома и цветочные клумбы у лестницы" },
+      { src: "assets/images/slide-sunset.webp", alt: "Город Astrum на закате: фахверковые дома и каменная башня над деревьями" },
+      { src: "assets/images/slide-crystal.webp", alt: "Дом с розовыми кристаллами и башня с водопадом" }
+    ];
+
+    var frames = galleryBoxes.map(function (box) {
+      var front = box.querySelector(".gallery-img");
+      var back = front.cloneNode(false);
+      back.classList.remove("is-active");
+      back.alt = "";
+      back.removeAttribute("src");
+      box.appendChild(back);
+      var current = -1;
+      SLIDES.forEach(function (slide, i) {
+        if (front.getAttribute("src") === slide.src) current = i;
       });
-      if (focus) fxTabs[index].focus();
-    };
-    fx.classList.add("is-js");
-    fxTabs.forEach(function (tab, i) {
-      tab.addEventListener("click", function () { fxSelect(i, false); });
-      tab.addEventListener("keydown", function (e) {
-        var next = null;
-        if (e.key === "ArrowDown" || e.key === "ArrowRight") next = (i + 1) % fxTabs.length;
-        if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = (i - 1 + fxTabs.length) % fxTabs.length;
-        if (e.key === "Home") next = 0;
-        if (e.key === "End") next = fxTabs.length - 1;
-        if (next === null) return;
-        e.preventDefault();
-        fxSelect(next, true);
-      });
+      return { front: front, back: back, index: current };
     });
+
+    var showSlide = function (frame, index) {
+      var incoming = frame.back;
+      var outgoing = frame.front;
+      var done = false;
+      frame.index = index;
+      var reveal = function () {
+        if (done) return;
+        done = true;
+        incoming.classList.add("is-active");
+        outgoing.classList.remove("is-active");
+        frame.front = incoming;
+        frame.back = outgoing;
+      };
+      incoming.onload = reveal;
+      incoming.onerror = function () { done = true; };
+      incoming.alt = SLIDES[index].alt;
+      incoming.src = SLIDES[index].src;
+      if (incoming.complete && incoming.naturalWidth) reveal();
+    };
+
+    var nextSlides = function () {
+      var busy = frames.map(function (frame) { return frame.index; });
+      var free = [];
+      SLIDES.forEach(function (slide, i) {
+        if (busy.indexOf(i) === -1) free.push(i);
+      });
+      for (var i = free.length - 1; i > 0; i--) { // перемешиваем
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = free[i];
+        free[i] = free[j];
+        free[j] = tmp;
+      }
+      return free;
+    };
+
+    // подгружаем остальные кадры заранее, когда страница уже открылась
+    window.addEventListener("load", function () {
+      setTimeout(function () {
+        SLIDES.forEach(function (slide) { new Image().src = slide.src; });
+      }, 800);
+    });
+
+    setInterval(function () {
+      if (document.hidden) return;
+      var pick = nextSlides();
+      if (pick.length < 2) return;
+      showSlide(frames[0], pick[0]);
+      setTimeout(function () { showSlide(frames[1], pick[1]); }, 450);
+    }, SLIDE_EVERY_MS);
   }
 
   // --- Правила: поиск по пунктам и подсветка раздела в содержании -----------
@@ -253,12 +320,15 @@
           unit.hidden = !hit;
           if (hit) { any = true; matched += 1; }
         });
-        // раздел виден, если нашлось хотя бы одно совпадение
+        // в блоках без пунктов (например, карточки законопроектов) раздел виден, если есть совпадение в заголовке
         var visible = !filtering || any;
         article.hidden = !visible;
         if (tocLinks[article.id]) tocLinks[article.id].hidden = !visible;
         if (visible) shown += 1;
       });
+      // заголовок блока законопроектов прячется, если ни один законопроект не подошёл под поиск
+      var billsHead = rulesContent.querySelector(".bills-head");
+      if (billsHead) billsHead.hidden = filtering && !rulesContent.querySelector("article.bill:not([hidden])");
       emptyRules.hidden = shown !== 0;
       punishButtons.forEach(function (button) {
         var on = button.getAttribute("data-punish") === activePunish;
@@ -451,49 +521,4 @@
       card.addEventListener("click", function () { openModal(card); });
     });
   }
-})();
-
-
-// --- Вики: кнопки «Копировать» (data-copy) ---------------------------------
-(function () {
-  "use strict";
-  var buttons = document.querySelectorAll("[data-copy]");
-  if (!buttons.length) return;
-
-  function fallbackCopy(text) {
-    var area = document.createElement("textarea");
-    area.value = text;
-    area.setAttribute("readonly", "");
-    area.style.position = "fixed";
-    area.style.opacity = "0";
-    document.body.appendChild(area);
-    area.select();
-    var ok = false;
-    try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
-    document.body.removeChild(area);
-    return ok;
-  }
-
-  Array.prototype.forEach.call(buttons, function (button) {
-    var label = button.querySelector("span");
-    var original = label ? label.textContent : "";
-    var timer = null;
-    function show(text) {
-      if (!label) return;
-      label.textContent = text;
-      clearTimeout(timer);
-      timer = setTimeout(function () { label.textContent = original; }, 1800);
-    }
-    button.addEventListener("click", function () {
-      var text = button.getAttribute("data-copy");
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(
-          function () { show("Скопировано"); },
-          function () { show(fallbackCopy(text) ? "Скопировано" : "Не удалось"); }
-        );
-      } else {
-        show(fallbackCopy(text) ? "Скопировано" : "Не удалось");
-      }
-    });
-  });
 })();

@@ -729,3 +729,20 @@ html[data-theme="light"] .nav-icon { color: #d41fa9; }
 
 html[data-theme="light"] .astrum-home .photo-hero .server-address small { color: #5b5170; text-shadow: none; }
 html[data-theme="light"] .astrum-home .photo-hero .server-address strong { text-shadow: none; }
+
+/* Меню в светлой теме: серая заливка при наведении, выбранный пункт закрашен */
+html[data-theme="light"] .astrum-site .site-header .main-nav a:not(.active):hover {
+  background: rgba(40, 30, 10, 0.09);
+  color: #1c1628;
+  border-color: transparent;
+}
+
+html[data-theme="light"] .astrum-site .site-header .main-nav a.active,
+html[data-theme="light"] .astrum-site .site-header.is-scrolled .main-nav a.active,
+html[data-theme="light"] .astrum-site .site-header .main-nav.open a.active {
+  background: #fb51d0;
+  border-color: #fb51d0;
+  color: #2a0b25;
+}
+
+html[data-theme="light"] .astrum-site .site-header .main-nav a.active .nav-icon { color: #2a0b25; }

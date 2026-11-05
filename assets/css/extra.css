@@ -182,61 +182,6 @@
   filter: none;
 }
 
-/* ===== Главная: бегущая строка ===== */
-/* В разметке шесть одинаковых групп, лента сдвигается ровно на одну (1/6 длины) и возвращается —
-   шов не виден. Группы с aria-hidden — копии для зацикливания. */
-.ticker {
-  justify-content: flex-start;
-  gap: 0;
-  padding: 16px 0;
-}
-
-.ticker-track {
-  display: flex;
-  flex-shrink: 0;
-  width: max-content;
-  animation: ticker-scroll 24s linear infinite;
-  will-change: transform;
-}
-
-.ticker:hover .ticker-track {
-  animation-play-state: paused;
-}
-
-.ticker-group {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 30px;
-  padding-right: 30px;
-}
-
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-16.6666667%); }
-}
-
-@media (max-width: 760px) {
-  .ticker {
-    padding: 13px 0;
-  }
-
-  .ticker-group {
-    gap: 25px;
-    padding-right: 25px;
-  }
-
-  .ticker-track {
-    animation-duration: 20s;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ticker-track {
-    animation: none;
-  }
-}
-
 /* ===== Главная: карточки «О сервере» — фиолетовая обводка и подъём при наведении ===== */
 .feature-card {
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease,
@@ -2594,4 +2539,178 @@ html[data-theme="light"] .hero-visual > img.logo-light {
 .rules-toc-bills a.is-active .bill-dot {
   transform: scale(1.3);
   box-shadow: 0 0 12px 1px var(--bill);
+}
+
+/* ======================================================================
+   Правки от 5 ноября: фон и текст главной, меню, кнопка, шрифт
+   ====================================================================== */
+
+/* Цвет логотипа-планеты — на всём сайте (раньше был только на главной) */
+.astrum-site {
+  --planet: #fb51d0;
+  --planet-light: #ff7be3;
+  --planet-shadow: #a1048b;
+}
+
+/* ----- Меню: активный пункт обведён «кружочком» цвета логотипа ----- */
+.astrum-site .site-header .main-nav a {
+  padding: 9px 20px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  transition: color 0.2s ease, border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.astrum-site .site-header .main-nav a.active,
+.astrum-site .site-header.is-scrolled .main-nav a.active {
+  border-color: var(--planet);
+  background: rgba(251, 81, 208, 0.12);
+  box-shadow: 0 0 18px -4px rgba(251, 81, 208, 0.55);
+  color: #fff;
+}
+
+.astrum-site .site-header .main-nav a:not(.active):hover {
+  border-color: rgba(251, 81, 208, 0.38);
+}
+
+/* старое подчёркивание больше не нужно */
+.astrum-site .site-header .main-nav a.active::after,
+.astrum-site .site-header.is-scrolled .main-nav a.active::after {
+  display: none;
+}
+
+.astrum-site .site-header .main-nav {
+  gap: 10px;
+}
+
+@media (min-width: 761px) {
+  .astrum-site .site-header.is-scrolled .main-nav a {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+}
+
+@media (max-width: 980px) {
+  .astrum-site .site-header .main-nav.open {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .astrum-site .site-header .main-nav.open a {
+    padding: 10px 22px;
+  }
+}
+
+/* ----- Кнопка «Начать играть» в шапке — цвета логотипа ----- */
+.astrum-site .site-header .header-cta {
+  border-color: transparent;
+  background: var(--planet);
+  color: #2a0b25;
+  font-weight: 800;
+  box-shadow: 0 3px var(--planet-shadow);
+}
+
+.astrum-site .site-header .header-cta:hover {
+  background: var(--planet-light);
+  border-color: transparent;
+  color: #2a0b25;
+  transform: translateY(-1px);
+}
+
+.astrum-site .site-header .header-cta::after {
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+}
+
+/* ----- Главная: фон без сильного затемнения ----- */
+.astrum-home .photo-hero .hero-background {
+  object-position: center 45%;
+  filter: none;
+}
+
+.astrum-home .photo-hero::before {
+  background:
+    linear-gradient(90deg, rgba(16, 17, 23, 0.62) 0%, rgba(16, 17, 23, 0.34) 36%, rgba(16, 17, 23, 0.04) 64%, rgba(16, 17, 23, 0) 100%),
+    linear-gradient(rgba(16, 17, 23, 0.28) 0%, rgba(16, 17, 23, 0) 22%, rgba(16, 17, 23, 0) 72%, rgba(16, 17, 23, 0.9) 94%, #101117 100%);
+}
+
+/* ----- Главная: заголовок шрифтом из фото 1 (Montserrat Black, плотный кернинг) ----- */
+.astrum-home .hero h1 {
+  font-family: "Montserrat", "Inter Display", "Arial Black", sans-serif;
+  font-weight: 900;
+  font-size: clamp(60px, 7.2vw, 116px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  margin-top: 28px;
+  text-shadow: 0 6px 34px rgba(0, 0, 0, 0.45);
+}
+
+/* ----- Главная: текст описания крупнее ----- */
+.astrum-home .photo-hero .hero-copy > p {
+  max-width: 640px;
+  margin-top: 30px;
+  font-size: clamp(18px, 1.55vw, 22px);
+  font-weight: 500;
+  line-height: 1.7;
+  color: #f4effa;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+}
+
+
+/* ----- Главная: «Без лицензии · Без приватов · Версия» крупнее ----- */
+.astrum-home .photo-hero .hero-facts {
+  gap: 14px 30px;
+  margin-top: 34px;
+  font-size: 19px;
+  font-weight: 700;
+  color: #f4effa;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+}
+
+.astrum-home .photo-hero .hero-facts > span {
+  gap: 9px;
+}
+
+.astrum-home .photo-hero .hero-facts svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 3;
+  color: var(--planet);
+}
+
+@media (max-width: 760px) {
+  .astrum-home .hero h1 {
+    font-size: clamp(52px, 16vw, 84px);
+  }
+
+  /* «ASTRUM» и «INFO» уже на разных строках (span — блок), <br> давал лишний пробел */
+  .astrum-home .hero h1 br {
+    display: none;
+  }
+
+  .astrum-home .photo-hero .hero-copy > p {
+    font-size: 17px;
+  }
+
+  .astrum-home .photo-hero .hero-facts {
+    font-size: 16px;
+    gap: 10px 20px;
+  }
+
+  .astrum-home .photo-hero::before {
+    background:
+      linear-gradient(90deg, rgba(16, 17, 23, 0.55), rgba(16, 17, 23, 0.2)),
+      linear-gradient(rgba(16, 17, 23, 0.2) 0%, rgba(16, 17, 23, 0.15) 60%, rgba(16, 17, 23, 0.9) 94%, #101117 100%);
+  }
+}
+
+/* ----- Главная: скриншоты стоят на месте бывшей бегущей строки — сразу под первым экраном ----- */
+.astrum-home .gallery {
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+}
+
+@media (max-width: 760px) {
+  .astrum-home .gallery {
+    margin-top: 0;
+  }
 }
